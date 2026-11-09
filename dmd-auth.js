@@ -8,10 +8,11 @@
    - Este archivo se carga DESPUÉS de script.js y sobrescribe sus
      funciones globales (handleLogout, triggerGoogleSignIn,
      getClientProfile) con las versiones de servidor.
-   - Google: el botón usa Google Identity Services y manda el JWT a
-     POST /api/auth/google, que lo verifica en el servidor. Si Google
-     rechaza el origen (login.dmdmx.dev aún NO autorizado en Google
-     Cloud Console), se muestra el error visible en #googleError. */
+   - Google: el botón abre el popup OAuth2 de Google Identity Services
+     y manda el token a POST /api/auth/google, que lo verifica en el
+     servidor. login.dmdmx.dev YA está autorizado como origen en
+     Google Cloud Console. Si algo falla, se muestra el error visible
+     en #googleError. */
 (function () {
   'use strict';
 
@@ -137,20 +138,26 @@
   }
   window.handleLogout = handleLogout;
 
-  // --- Google: verifica el JWT en el servidor ---
-  var googleTimer = null;
-  function onGoogleCredential(response) {
-    if (googleTimer) { clearTimeout(googleTimer); googleTimer = null; }
+  // --- Google: popup OAuth2 con verificación EN EL SERVIDOR ---
+  // El aviso One Tap (google.accounts.id.prompt) NO es fiable: Google
+  // puede negarse a mostrarlo (opt_out_or_no_session / suppressed_by_user)
+  // aunque haya sesión activa de Google en el navegador. El popup
+  // OAuth2, en cambio, se abre con el clic del usuario y siempre
+  // muestra el selector de cuentas. El token NUNCA se acepta en el
+  // cliente: se manda a POST /api/auth/google, que lo verifica en el
+  // servidor antes de crear la sesión.
+  var googleTokenClient = null;
+  function onGoogleAccessToken(tokenResponse) {
     showGoogleError(null);
-    var credential = response && response.credential;
-    if (!credential) {
+    var accessToken = tokenResponse && tokenResponse.access_token;
+    if (!accessToken) {
       showGoogleError('Google no devolvió credenciales. Prueba con correo y contraseña.');
       return;
     }
     fetch('/api/auth/google', {
       method: 'POST', credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ credential: credential })
+      body: JSON.stringify({ access_token: accessToken })
     })
       .then(function (r) { return r.json().then(function (d) { return { status: r.status, data: d }; }); })
       .then(function (out) {
@@ -164,53 +171,24 @@
 
   function triggerGoogleSignIn() {
     showGoogleError(null);
-    if (!window.google || !google.accounts || !google.accounts.id) {
+    if (!window.google || !google.accounts || !google.accounts.oauth2) {
       showGoogleError('No se pudo cargar el inicio de sesión de Google. Revisa tu conexión o usa correo y contraseña.');
       return;
     }
     try {
-      google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: onGoogleCredential,
-        auto_select: false
-      });
-    } catch (e) {
-      showGoogleError('No se pudo iniciar Google (' + (e && e.message ? e.message : 'error') + '). Prueba con correo y contraseña.');
-      return;
-    }
-    var answered = false;
-    googleTimer = setTimeout(function () {
-      if (!answered) {
-        showGoogleError('Google no respondió. Si este dominio (login.dmdmx.dev) aún no está autorizado en Google Cloud Console, usa correo y contraseña.');
+      if (!googleTokenClient) {
+        googleTokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: GOOGLE_CLIENT_ID,
+          scope: 'openid email profile',
+          callback: onGoogleAccessToken,
+          error_callback: function (err) {
+            if (err && err.type === 'popup_closed') return; // el usuario cerró el popup
+            showGoogleError('Google canceló el inicio de sesión. Prueba de nuevo o usa correo y contraseña.');
+          }
+        });
       }
-    }, 10000);
-    try {
-      google.accounts.id.prompt(function (notification) {
-        try {
-          if (notification.isDisplayed && notification.isDisplayed()) return; // esperando al usuario
-          if (notification.isNotDisplayed && notification.isNotDisplayed()) {
-            answered = true; if (googleTimer) { clearTimeout(googleTimer); googleTimer = null; }
-            var reason = notification.getNotDisplayedReason ? notification.getNotDisplayedReason() : 'unknown_reason';
-            if (reason === 'unregistered_origin') {
-              showGoogleError('Google rechazó este origen: login.dmdmx.dev aún no está autorizado en Google Cloud Console. Entra con correo y contraseña mientras se autoriza.');
-            } else if (reason === 'opt_out_or_no_session' || reason === 'suppressed_by_user') {
-              showGoogleError('Inicia sesión en tu cuenta de Google en este navegador e inténtalo de nuevo, o usa correo y contraseña.');
-            } else {
-              showGoogleError('Google no mostró el inicio de sesión (' + reason + '). Prueba con correo y contraseña.');
-            }
-            return;
-          }
-          if (notification.isSkippedMoment && notification.isSkippedMoment()) {
-            answered = true; if (googleTimer) { clearTimeout(googleTimer); googleTimer = null; }
-            var skipped = notification.getSkippedReason ? notification.getSkippedReason() : '';
-            if (skipped && skipped !== 'user_cancel') {
-              showGoogleError('Google canceló el inicio de sesión (' + skipped + '). Prueba con correo y contraseña.');
-            }
-          }
-        } catch (e) { /* el callback de GIS no debe romper la página */ }
-      });
+      googleTokenClient.requestAccessToken({ prompt: 'select_account' });
     } catch (e) {
-      if (googleTimer) { clearTimeout(googleTimer); googleTimer = null; }
       showGoogleError('No se pudo abrir el inicio de sesión de Google. Prueba con correo y contraseña.');
     }
   }

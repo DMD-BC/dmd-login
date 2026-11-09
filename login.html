@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iniciar Sesión · Portal Corporativo | DMD</title>
+  <meta name="description" content="Acceso seguro al portal corporativo de DMD. Gestión de proyectos, bocetos de Canva Studio y seguimiento con autenticación Google y correo con contraseña.">
+    <link rel="icon" type="image/x-icon" href="https://www.dmdmx.dev/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://www.dmdmx.dev/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://www.dmdmx.dev/assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://www.dmdmx.dev/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" href="https://www.dmdmx.dev/apple-touch-icon.png">
+  
+  <link rel="stylesheet" href="https://www.dmdmx.dev/style.css">
+  <link rel="stylesheet" href="lovable-theme.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <meta property="og:type" content="website">
+  <meta property="og:site_name" content="DMD | Digital Mijma Dreams">
+  <meta property="og:title" content="Iniciar Sesión · Portal Corporativo | DMD">
+  <meta property="og:description" content="Acceso seguro al portal corporativo de DMD. Gestión de proyectos, bocetos de Canva Studio y seguimiento con autenticación Google y correo con contraseña.">
+  <meta property="og:image" content="https://www.dmdmx.dev/assets/social/og-dmd.jpg">
+  <meta property="og:image:secure_url" content="https://www.dmdmx.dev/assets/social/og-dmd.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Iniciar Sesión · Portal Corporativo | DMD · DMD Digital Mijma Dreams">
+  <meta property="og:url" content="https://login.dmdmx.dev/login.html">
+  <meta property="og:locale" content="es_MX">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Iniciar Sesión · Portal Corporativo | DMD">
+  <meta name="twitter:description" content="Acceso seguro al portal corporativo de DMD. Gestión de proyectos, bocetos de Canva Studio y seguimiento con autenticación Google y correo con contraseña.">
+  <meta name="twitter:image" content="https://www.dmdmx.dev/assets/social/og-dmd.jpg">
+  <meta name="twitter:image:alt" content="Iniciar Sesión · Portal Corporativo | DMD · DMD Digital Mijma Dreams">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  <!-- Twitter / X Card Meta Tags -->
+  
+  
+  
+  
+</head>
+<body class="login-page" style="padding-bottom: 220px !important;">
+
+  <div class="login-box">
+    <!-- Logotipo Corporativo DMD -->
+    <div class="login-logo">
+      <a href="https://www.dmdmx.dev" style="display:inline-block; text-decoration:none;">
+        <img src="assets/logo-dmd.svg" alt="DMD" style="height:52px; width:52px; margin:0 auto 10px auto;">
+        <h1>DMD</h1>
+        <p>Portal Corporativo &amp; Control de Proyectos</p>
+      </a>
+    </div>
+
+    <!-- Tarjeta Modular de Acceso -->
+    <div class="card card-outline card-primary" style="box-shadow:0 10px 25px -5px rgba(15, 23, 42, 0.1); border-radius:18px; overflow:hidden;">
+      <div class="card-header" style="justify-content:center; text-align:center; padding:18px 24px;">
+        <h3 class="card-title" style="font-size:1.05rem;">
+          <span class="card-title-icon">🔐</span>
+          Acceso al Panel de Control
+        </h3>
+      </div>
+
+      <div class="card-body login-card-body">
+
+        <!-- Banner de Sesión Activa (si el usuario ya inició sesión con Google) -->
+        <div id="alreadyLoggedInBanner" style="display:none; background:#eff6ff; border:1px solid #bfdbfe; border-radius:14px; padding:16px; margin-bottom:18px; text-align:center;">
+          <div style="font-size:1.3rem; margin-bottom:4px;">✨</div>
+          <div style="font-size:0.92rem; font-weight:800; color:#1e40af;" id="alreadyLoggedInName">Sesión Activa</div>
+          <p style="font-size:0.78rem; color:#475569; margin:4px 0 12px;" id="alreadyLoggedInEmail">Ya estás conectado a tu cuenta oficial.</p>
+          <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+            <a href="portal.html" id="btnContinueToPanel" class="btn btn-primary" style="height:38px; padding:0 16px; font-size:0.84rem; font-weight:800; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">Continuar a mi Panel ➔</a>
+            <button type="button" onclick="handleLogout()" class="btn btn-secondary" style="height:38px; padding:0 14px; font-size:0.82rem; color:#dc2626; border-color:#fca5a5;">Cerrar Sesión</button>
+          </div>
+        </div>
+
+        <!-- Banner de Acceso Protegido Requerido -->
+        <div id="authRequiredBanner" style="display:none; background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:12px 14px; margin-bottom:16px; font-size:0.82rem; color:#991b1b; text-align:center;">
+          🔒 <strong>Área Protegida:</strong> Por seguridad, inicia sesión con tu cuenta de Google o correo verificado para acceder al panel.
+        </div>
+
+        <!-- Errores visibles del servidor y de Google -->
+        <div id="authError" style="display:none; background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:12px 14px; margin-bottom:16px; font-size:0.84rem; color:#991b1b; text-align:center;"></div>
+        <div id="googleError" style="display:none; background:#fffbeb; border:1px solid #fde68a; border-radius:12px; padding:12px 14px; margin-bottom:16px; font-size:0.84rem; color:#92400e; text-align:center;"></div>
+
+        <!-- PASO 1: Entrar con correo y contraseña (login real de servidor) -->
+        <div id="authStepLogin" class="auth-step">
+          <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:20px; text-align:center;">
+            Accede a tu panel corporativo con tu cuenta de Google o tu correo y contraseña.
+          </p>
+
+          <!-- MÉTODO 1: BOTÓN OFICIAL GOOGLE (verificado en el servidor) -->
+          <button type="button" class="btn-google" id="btnGoogleAuth" onclick="triggerGoogleSignIn()" title="Continuar con Google" style="width:100%; display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:14px;">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+            </svg>
+            <span>Continuar con Google</span>
+          </button>
+
+          <!-- Divisor Sutil -->
+          <div class="auth-divider">
+            <span>O ingresa con tu correo y contraseña</span>
+          </div>
+
+          <!-- Formulario de Correo + Contraseña (POST /api/auth/login) -->
+          <form id="loginForm">
+            <div style="margin-bottom:14px;">
+              <label for="loginEmail" style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">
+                ✉️ Correo Electrónico:
+              </label>
+              <div style="position:relative;">
+                <input type="email" id="loginEmail" class="auth-input" placeholder="tu.nombre@empresa.com" required autocomplete="email" style="padding-left:42px;">
+                <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:1.05rem; color:var(--text-muted); pointer-events:none;">📧</span>
+              </div>
+            </div>
+
+            <div style="margin-bottom:16px;">
+              <label for="loginPassword" style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">
+                🔑 Contraseña:
+              </label>
+              <div style="position:relative;">
+                <input type="password" id="loginPassword" class="auth-input" placeholder="Tu contraseña" required autocomplete="current-password" minlength="4" style="padding-left:42px;">
+                <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:1.05rem; color:var(--text-muted); pointer-events:none;">🔒</span>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:20px; font-size:0.82rem;">
+              <a href="https://wa.me/527621068212?text=Necesito%20apoyo%20con%20el%20acceso%20al%20portal%20DMD" target="_blank" rel="noopener noreferrer" style="color:var(--primary); font-weight:600;">
+                ¿Ayuda?
+              </a>
+            </div>
+
+            <button type="submit" id="btnLogin" class="btn btn-primary" style="width:100%; height:46px; border-radius:12px; font-size:0.95rem; font-weight:800; justify-content:center;">
+              Entrar ➔
+            </button>
+          </form>
+
+          <div style="text-align:center; font-size:0.84rem; margin-top:16px; color:var(--text-muted);">
+            ¿No tienes cuenta?
+            <a href="#" id="showRegister" style="color:var(--primary); font-weight:700;">Crear cuenta</a>
+          </div>
+        </div>
+
+        <!-- PASO 2: Crear cuenta (POST /api/auth/register) -->
+        <div id="authStepRegister" class="auth-step" style="display:none;">
+          <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:20px; text-align:center;">
+            Crea tu cuenta DMD para guardar tus proyectos y usar el builder con IA.
+          </p>
+
+          <form id="registerForm">
+            <div style="margin-bottom:14px;">
+              <label for="regName" style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">
+                👤 Nombre:
+              </label>
+              <input type="text" id="regName" class="auth-input" placeholder="Tu nombre" required autocomplete="name" minlength="2">
+            </div>
+
+            <div style="margin-bottom:14px;">
+              <label for="regEmail" style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">
+                ✉️ Correo Electrónico:
+              </label>
+              <input type="email" id="regEmail" class="auth-input" placeholder="tu.nombre@empresa.com" required autocomplete="email">
+            </div>
+
+            <div style="margin-bottom:20px;">
+              <label for="regPassword" style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">
+                🔑 Contraseña:
+              </label>
+              <input type="password" id="regPassword" class="auth-input" placeholder="Mínimo 4 caracteres" required autocomplete="new-password" minlength="4">
+            </div>
+
+            <button type="submit" id="btnRegister" class="btn btn-primary" style="width:100%; height:46px; border-radius:12px; font-size:0.95rem; font-weight:800; justify-content:center;">
+              Crear mi cuenta ➔
+            </button>
+          </form>
+
+          <div style="text-align:center; font-size:0.84rem; margin-top:16px; color:var(--text-muted);">
+            ¿Ya tienes cuenta?
+            <a href="#" id="showLogin" style="color:var(--primary); font-weight:700;">Entrar</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card-footer" style="font-size:0.8rem; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <span>¿Nuevo proyecto? <a href="https://www.dmdmx.dev/#contacto" style="color:var(--primary); font-weight:700;">Solicítalo aquí ➔</a></span>
+        <a href="https://wa.me/527621068212?text=Hola%20DMD,%20necesito%20asistencia%20con%20mi%20cuenta" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted); font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+          💬 Soporte por WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- Regresar a la Web Principal -->
+    <div style="text-align:center; margin-top:20px;">
+      <a href="https://www.dmdmx.dev" style="font-size:0.86rem; color:var(--text-muted); font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+        ← Volver a DMD
+      </a>
+    </div>
+  </div>
+
+  <!-- Contenedor Toast para Notificaciones Dinámicas -->
+  <div class="toast-container" id="dmdToastContainer" aria-live="polite"></div>
+
+  <!-- Script Inline de Respuesta Inmediata para Cookies -->
+  <script>
+    (function(){
+      try {
+        if (localStorage.getItem("dmd_cookies_accepted") === "true") {
+          document.write('<style>#cookieBanner, .cookie-consent, .cookie-banner { display: none !important; }</style>');
+        }
+      } catch(e){}
+    })();
+    function dmdDismissCookies(e) {
+      if (e) {
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+      }
+      try { localStorage.setItem("dmd_cookies_accepted", "true"); } catch(err){}
+      var el = document.getElementById("cookieBanner");
+      if (el) {
+        el.className += " is-hidden";
+        el.style.setProperty("display", "none", "important");
+        try { el.remove(); } catch(err){}
+      }
+      var all = document.querySelectorAll(".cookie-consent, .cookie-banner");
+      for (var i = 0; i < all.length; i++) {
+        all[i].className += " is-hidden";
+        all[i].style.setProperty("display", "none", "important");
+        try { all[i].remove(); } catch(err){}
+      }
+    }
+  </script>
+
+  <!-- Banner Oficial de Privacidad y Cookies (Estilo Apple / Google / Stripe) -->
+  <aside class="cookie-consent" id="cookieBanner" role="region" aria-label="Aviso de cookies">
+    <div class="cookie-content">
+      <div class="cookie-header">
+        <span class="cookie-badge">🍪 Privacidad &amp; Cookies</span>
+        <button type="button" class="cookie-close-btn" onclick="dmdDismissCookies(event); if(window.closeCookieBanner) closeCookieBanner(event);" ontouchstart="dmdDismissCookies(event)" ontouchend="dmdDismissCookies(event)" onpointerdown="dmdDismissCookies(event)" title="Cerrar aviso (✕)">✕</button>
+      </div>
+      <p>Utilizamos almacenamiento local esencial para garantizar la seguridad de tu sesión y recordar tus preferencias corporativas.</p>
+      <div class="cookie-actions">
+        <button type="button" class="btn-accept" onclick="dmdDismissCookies(event); if(window.acceptCookies) acceptCookies(event);" ontouchstart="dmdDismissCookies(event)" ontouchend="dmdDismissCookies(event)" onpointerdown="dmdDismissCookies(event)">Aceptar todas</button>
+        <button type="button" class="btn-reject" onclick="dmdDismissCookies(event); if(window.closeCookieBanner) closeCookieBanner(event);" ontouchstart="dmdDismissCookies(event)" ontouchend="dmdDismissCookies(event)" onpointerdown="dmdDismissCookies(event)">Solo necesarias</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Google Identity Services SDK Oficial -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Ackee Privacy-Friendly Analytics Tracker -->
+  <script async src="assets/tracker.js" data-ackee-server="" data-ackee-domain-id="dmd-platform-production" data-ackee-opts='{ "detailed": true, "ignoreLocalhost": false }'></script>
+  <script src="https://www.dmdmx.dev/script.js"></script>
+  <script src="dmd-patch.js"></script>
+  <script src="dmd-auth.js"></script>
+</body>
+</html>

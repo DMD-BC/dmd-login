@@ -1,0 +1,1 @@
+{"dependencies":{"pg":"^8.13.1"},"description":"Login real de servidor de DMD (login.dmdmx.dev). Funciones serverless de Vercel, sin framework. Misma base de datos que el builder.","name":"dmd-login","private":true,"version":"1.0.0"}

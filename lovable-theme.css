@@ -1,0 +1,287 @@
+/* ==========================================================================
+   DMD Login — Tema Lovable
+   Sobrescribe el tema corporativo oficial (style.css de www.dmdmx.dev)
+   con los colores de dmd-paginas-web-ia.vercel.app:
+   fondo crema #f7f4ed, Inter, degradado naranja #ff8a4c / rosa #f0467f /
+   azul #4f7dff, botones negros tipo píldora, tarjetas blancas suaves.
+   Se carga DESPUÉS de style.css, así que sus reglas ganan.
+   No toca la lógica: el login sigue siendo 100% client-side.
+   ========================================================================== */
+
+/* --- 1. Variables: el tema oficial usa variables CSS en casi todo,
+         así que al redefinirlas cambia el fondo, los textos, los
+         botones, los badges y los bordes de golpe. --- */
+:root {
+  --bg-primary: #f7f4ed;
+  --bg-secondary: #f7f4ed;
+  --bg-tertiary: #f1eee6;
+  --bg-canvas-area: #f1eee6;
+
+  --card-bg: #fcfbf8;
+  --card-border: rgba(28, 28, 28, .08);
+  --card-border-hover: rgba(28, 28, 28, .16);
+  --card-border-strong: rgba(28, 28, 28, .22);
+
+  --text-main: #1c1c1c;
+  --text-body: #333331;
+  --text-muted: #5f5f5d;
+  --text-light: #8a8781;
+
+  --primary: #1c1c1c;
+  --primary-hover: #000000;
+  --primary-dark: #000000;
+  --primary-light: #f1eee6;
+  --primary-border: rgba(28, 28, 28, .14);
+
+  --accent: #f0467f;
+  --accent-hover: #d63a6e;
+  --accent-light: #fdeef3;
+
+  --lovable: #f0467f;
+  --lovable-hover: #d63a6e;
+  --lovable-light: #fdeef3;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+}
+
+/* --- 2. Base: fondo crema, Inter, tinta oscura --- */
+body {
+  background-color: #f7f4ed !important;
+  color: #1c1c1c;
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #1c1c1c;
+  letter-spacing: -.02em;
+}
+a { color: #1c1c1c; }
+a:hover { color: #f0467f; }
+
+/* --- 3. Páginas: fondo crema (el oficial ponía gris/blanco) --- */
+body.login-page {
+  background-color: #f7f4ed !important;
+  /* Resplandor suave degradado detrás del contenido, como el hero Lovable */
+  background-image:
+    radial-gradient(38% 30% at 22% 8%, rgba(255, 138, 76, .20), transparent 70%),
+    radial-gradient(36% 32% at 78% 6%, rgba(79, 125, 255, .18), transparent 70%),
+    radial-gradient(30% 26% at 50% 0%, rgba(240, 70, 127, .14), transparent 70%);
+  background-repeat: no-repeat;
+}
+/* Franja degradada fina en la parte superior, sello Lovable */
+body.login-page::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff8a4c, #f0467f 50%, #4f7dff);
+  z-index: 9999;
+}
+body.dashboard-wrapper {
+  background-color: #f7f4ed !important;
+}
+
+/* --- 4. Tarjetas: blancas, borde suave, esquinas redondeadas --- */
+.card {
+  background-color: #fcfbf8 !important;
+  border: 1px solid rgba(28, 28, 28, .08) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 1px 3px rgba(28, 28, 28, .05) !important;
+}
+.card.card-outline,
+.card.card-outline.card-primary {
+  /* Borde superior rosa Lovable en vez de azul marino */
+  border-top: 3px solid #f0467f !important;
+}
+.card-header {
+  background-color: transparent !important;
+  border-bottom: 1px solid rgba(28, 28, 28, .07) !important;
+}
+.card-footer {
+  background-color: transparent !important;
+  border-top: 1px solid rgba(28, 28, 28, .07) !important;
+}
+.card-title { color: #1c1c1c !important; }
+.card-title-icon {
+  background: linear-gradient(135deg, #ff8a4c, #f0467f 55%, #4f7dff) !important;
+  color: #fff !important;
+  border-radius: 10px !important;
+}
+
+/* Cajas de información del portal/admin */
+.info-box {
+  background-color: #fcfbf8 !important;
+  border: 1px solid rgba(28, 28, 28, .08) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 1px 3px rgba(28, 28, 28, .05) !important;
+}
+.info-box-number { color: #1c1c1c !important; }
+.info-box-text { color: #5f5f5d !important; }
+
+/* --- 5. Botones: principales negros tipo píldora --- */
+.btn-primary {
+  background-color: #1c1c1c !important;
+  color: #fcfbf8 !important;
+  border: 1px solid #1c1c1c !important;
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #000 !important;
+  border-color: #000 !important;
+  color: #fff !important;
+}
+.btn-secondary {
+  background-color: #fcfbf8 !important;
+  color: #1c1c1c !important;
+  border: 1px solid rgba(28, 28, 28, .16) !important;
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+}
+.btn-secondary:hover { background-color: #fff !important; }
+.btn-google {
+  background-color: #fff !important;
+  color: #1c1c1c !important;
+  border: 1px solid rgba(28, 28, 28, .12) !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 1px 3px rgba(28, 28, 28, .06) !important;
+}
+.btn-google:hover { border-color: rgba(28, 28, 28, .25) !important; }
+.btn-warning {
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+}
+.auth-back-btn {
+  color: #5f5f5d !important;
+}
+.auth-back-btn:hover { color: #f0467f !important; }
+
+/* --- 6. Inputs: borde suave, foco rosa --- */
+.auth-input {
+  background-color: #fff !important;
+  border: 1.5px solid rgba(28, 28, 28, .14) !important;
+  border-radius: 12px !important;
+  color: #1c1c1c !important;
+}
+.auth-input:focus {
+  border-color: #f0467f !important;
+  box-shadow: 0 0 0 3px rgba(240, 70, 127, .15) !important;
+}
+.tool-input,
+.tool-select {
+  background-color: #fff !important;
+  border: 1.5px solid rgba(28, 28, 28, .14) !important;
+  border-radius: 12px !important;
+  color: #1c1c1c !important;
+}
+.tool-input:focus,
+.tool-select:focus {
+  border-color: #f0467f !important;
+  box-shadow: 0 0 0 3px rgba(240, 70, 127, .15) !important;
+  outline: none !important;
+}
+.otp-code-input {
+  border-radius: 12px !important;
+  border-color: rgba(28, 28, 28, .14) !important;
+}
+.otp-code-input:focus {
+  border-color: #f0467f !important;
+  box-shadow: 0 0 0 3px rgba(240, 70, 127, .15) !important;
+}
+.otp-countdown-pill {
+  background: #f1eee6 !important;
+  color: #1c1c1c !important;
+  border-radius: 9999px !important;
+}
+.otp-badge-sent {
+  background: linear-gradient(135deg, #ff8a4c, #f0467f) !important;
+  color: #fff !important;
+  border-radius: 9999px !important;
+}
+
+/* --- 7. Barra lateral y navegación --- */
+.dashboard-sidebar {
+  background-color: #fcfbf8 !important;
+  border-right: 1px solid rgba(28, 28, 28, .08) !important;
+}
+.sidebar-menu-item {
+  border-radius: 9999px !important;
+  color: #333331 !important;
+}
+.sidebar-menu-item:hover {
+  background: rgba(28, 28, 28, .05) !important;
+  color: #1c1c1c !important;
+}
+.sidebar-menu-item.active {
+  background: #1c1c1c !important;
+  color: #fcfbf8 !important;
+}
+.sidebar-user-name { color: #1c1c1c !important; }
+.sidebar-user-role { color: #5f5f5d !important; }
+.navbar {
+  background-color: rgba(252, 251, 248, .85) !important;
+  border-bottom: 1px solid rgba(28, 28, 28, .08) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* --- 8. Tablas, badges, divisores y miscelánea --- */
+.table thead th,
+.table-responsive th,
+.table-responsive-dmd th {
+  color: #1c1c1c !important;
+  border-bottom: 1px solid rgba(28, 28, 28, .12) !important;
+}
+.table td,
+.table-responsive td,
+.table-responsive-dmd td {
+  border-top: 1px solid rgba(28, 28, 28, .07) !important;
+}
+.badge-primary {
+  background-color: #1c1c1c !important;
+  color: #fcfbf8 !important;
+  border-color: #1c1c1c !important;
+}
+.badge-accent {
+  background-color: #fdeef3 !important;
+  color: #f0467f !important;
+  border-color: rgba(240, 70, 127, .25) !important;
+}
+.auth-divider { color: #5f5f5d !important; }
+.auth-divider::before,
+.auth-divider::after {
+  background: rgba(28, 28, 28, .12) !important;
+}
+.cookie-consent {
+  background-color: #fcfbf8 !important;
+  border: 1px solid rgba(28, 28, 28, .1) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(28, 28, 28, .10) !important;
+}
+.btn-accept {
+  background-color: #1c1c1c !important;
+  color: #fcfbf8 !important;
+  border-radius: 9999px !important;
+}
+.btn-reject {
+  border-radius: 9999px !important;
+}
+.toast-container .toast,
+.toast {
+  border-radius: 12px !important;
+}
+.login-logo h1,
+.login-page h1 {
+  letter-spacing: -.03em;
+}
+/* Acento degradado en el título principal del login */
+.login-logo h1 span,
+.login-page .login-box h1 {
+  background: linear-gradient(135deg, #ff8a4c, #f0467f 50%, #4f7dff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

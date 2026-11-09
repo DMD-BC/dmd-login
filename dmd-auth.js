@@ -130,11 +130,12 @@
   }
 
   // --- Cerrar sesión (servidor: borra la sesión en la DB y la cookie) ---
-  window.handleLogout = function () {
+  function handleLogout() {
     fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' })
       .catch(function () { /* aunque falle, salimos al login */ })
       .then(function () { window.location.replace('login.html'); });
-  };
+  }
+  window.handleLogout = handleLogout;
 
   // --- Google: verifica el JWT en el servidor ---
   var googleTimer = null;
@@ -161,7 +162,7 @@
       });
   }
 
-  window.triggerGoogleSignIn = function () {
+  function triggerGoogleSignIn() {
     showGoogleError(null);
     if (!window.google || !google.accounts || !google.accounts.id) {
       showGoogleError('No se pudo cargar el inicio de sesión de Google. Revisa tu conexión o usa correo y contraseña.');
@@ -212,10 +213,11 @@
       if (googleTimer) { clearTimeout(googleTimer); googleTimer = null; }
       showGoogleError('No se pudo abrir el inicio de sesión de Google. Prueba con correo y contraseña.');
     }
-  };
+  }
+  window.triggerGoogleSignIn = triggerGoogleSignIn;
 
   // --- Perfil real (para portal.html / script.js oficial) ---
-  window.getClientProfile = function () {
+  function getClientProfile() {
     var m = window.__DMD_ME__ || meCache;
     if (m && m.user) {
       return {
@@ -225,7 +227,26 @@
       };
     }
     return {};
-  };
+  }
+  window.getClientProfile = getClientProfile;
+
+  // El script oficial (script.js de www.dmdmx.dev) reasigna sus
+  // versiones VIEJAS de triggerGoogleSignIn/handleLogout/getClientProfile
+  // en DOMContentLoaded, DESPUÉS de este archivo: el botón de Google
+  // acababa corriendo el flujo viejo (OAuth2 a localStorage, sin
+  // servidor) y el portal lo rebotaba al login como si nada hubiera
+  // pasado. Reaplicar las versiones de servidor entonces y en load.
+  function applyServerOverrides() {
+    window.triggerGoogleSignIn = triggerGoogleSignIn;
+    window.handleLogout = handleLogout;
+    window.getClientProfile = getClientProfile;
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyServerOverrides);
+  } else {
+    applyServerOverrides();
+  }
+  window.addEventListener('load', applyServerOverrides);
 
   // --- Portal: pinta nombre/correo/cuota y botón admin ---
   function populateUserUI(me) {

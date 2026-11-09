@@ -228,6 +228,14 @@
 
     if (countBadge) countBadge.textContent = clientCreations.length;
 
+    // Mensaje de vacío FUERA de la tabla: dentro de la tabla se cortaba
+    // en móvil. Si no hay creaciones se oculta la tabla y se muestra el
+    // mensaje; si las hay, se muestra la tabla.
+    const emptyEl = document.getElementById("clientAiCreationsEmpty");
+    const tableWrap = container ? container.closest(".table-responsive") : null;
+    if (emptyEl) emptyEl.style.display = clientCreations.length === 0 ? "block" : "none";
+    if (tableWrap) tableWrap.style.display = clientCreations.length === 0 ? "none" : "";
+
     // Renderizado en Tabla
     if (container) {
       if (clientCreations.length === 0) {

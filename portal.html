@@ -13,6 +13,28 @@
   
   <link rel="stylesheet" href="https://www.dmdmx.dev/style.css">
   <link rel="stylesheet" href="lovable-theme.css">
+  <style>
+    /* --- Ajustes móviles del portal (solo esta página) --- */
+    /* El script oficial inyecta un SEGUNDO botón ☰ en .nav-actions y lo
+       fuerza con display:flex en línea: en el portal sobra (ya existe el
+       toggle del sidebar) y desborda la barra superior. Se oculta aquí. */
+    .btn-hamburger-mobile,
+    #btnMobileNavToggle { display: none !important; }
+    /* La tabla de Creaciones no tenía scroll lateral: sus columnas se
+       cortaban por el borde de la tarjeta. */
+    .table-responsive { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table-responsive .table { min-width: 680px; }
+    @media (max-width: 640px) {
+      header.navbar .nav-container { padding: 0 12px !important; }
+      .nav-actions { gap: 6px !important; }
+      /* "Ir a Sitio Web" sobra en móvil: el logo ya enlaza al sitio. */
+      .nav-actions a[href="https://www.dmdmx.dev"] { display: none !important; }
+      #topbarUserPill { min-width: 0; }
+      #topbarUserName { max-width: 84px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      header.navbar .btn { padding: 0 8px !important; }
+      .dashboard-header-bar h1 { font-size: 1.2rem !important; }
+    }
+  </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
@@ -134,7 +156,7 @@
       <!-- Acciones de Cabecera -->
       <div class="nav-actions" style="gap:10px; display:flex; align-items:center;">
         <!-- Indicador de Sesión -->
-        <div style="display:flex; align-items:center; gap:8px; background:#f8fafc; border:1px solid #cbd5e1; padding:5px 12px; border-radius:10px; font-size:0.8rem;">
+        <div id="topbarUserPill" style="display:flex; align-items:center; gap:8px; background:#f8fafc; border:1px solid #cbd5e1; padding:5px 12px; border-radius:10px; font-size:0.8rem;">
           <span style="width:8px; height:8px; border-radius:50%; background:#10b981; display:inline-block;"></span>
           <span style="font-weight:700; color:var(--text-main);" id="topbarUserName">Cliente Corporativo</span>
         </div>
@@ -306,24 +328,9 @@
               </div>
             </div>
             <div class="card-body" style="padding:0;">
-              <!-- Tabla de Folios AdminLTE -->
-              <div class="table-responsive-dmd">
-                <table style="width:100%; min-width:480px; border-collapse:collapse; font-size:0.86rem; text-align:left;">
-                  <thead style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
-                    <tr>
-                      <th style="padding:12px 16px; font-weight:800; color:var(--text-main);">Folio</th>
-                      <th style="padding:12px 16px; font-weight:800; color:var(--text-main);">Proyecto / Servicio</th>
-                      <th style="padding:12px 16px; font-weight:800; color:var(--text-main);">Estatus</th>
-                      <th style="padding:12px 16px; font-weight:800; color:var(--text-main);">Progreso</th>
-                      <th style="padding:12px 16px; font-weight:800; color:var(--text-main); text-align:right;">Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <td colspan="5" style="padding:28px 16px; text-align:center; color:var(--text-muted);">Aún no tienes proyectos ni folios. Crea tu primera página con IA para verla aquí.</td>
-                  </tr>
-                </tbody>
-              </table>
+              <!-- Sin folios todavía: la tabla se reconstruye cuando existan folios reales. -->
+              <div style="padding:28px 24px; text-align:center; color:var(--text-muted); font-size:0.88rem;">
+                Aún no tienes proyectos ni folios. Crea tu primera página con IA para verla aquí.
               </div>
             </div>
             <div class="card-footer" style="display:flex; justify-content:space-between; align-items:center;">
@@ -422,6 +429,7 @@
             </div>
           </div>
           <div class="card-body" style="padding:0;">
+            <div id="clientAiCreationsEmpty" style="display:none; text-align:center; padding:30px 16px; color:var(--text-muted); font-size:0.86rem;">No se encontraron creaciones con el filtro seleccionado.</div>
             <div class="table-responsive">
               <table class="table" style="margin-bottom:0;">
                 <thead>

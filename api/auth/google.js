@@ -1,19 +1,19 @@
 // POST /api/auth/google — Inicia sesión (o crea cuenta) con Google.
-// Body: { credential } = JWT (id_token) de Google Identity Services.
-// El token se verifica EN EL SERVIDOR contra
-// https://oauth2.googleapis.com/tokeninfo: aud debe ser el client ID
-// de DMD, iss accounts.google.com, exp vigente y email_verified true.
-// El JWT NUNCA se acepta sin verificar: lo que diga el cliente no vale.
+// Body: { credential } = JWT (id_token) de Google Identity Services,
+// o { access_token } = token OAuth2 del popup. El token se verifica
+// EN EL SERVIDOR contra https://oauth2.googleapis.com/tokeninfo:
+// aud debe ser el client ID de DMD y email_verified true (el id_token
+// además exige iss accounts.google.com y exp vigente; el access_token
+// exige expires_in > 0). El token NUNCA se acepta sin verificar: lo
+// que diga el cliente no vale.
 // Si el correo no tiene cuenta, se crea con pass_hash 'google$<azar>'
 // (valor no usable: scryptVerify lo rechaza, así que esa cuenta solo
 // puede entrar con Google, nunca con contraseña).
 // Responde 200 + cookie de sesión httpOnly (SSO .dmdmx.dev).
 // Sin DATABASE_URL -> 503 db:false.
 // NOTA: el botón Google solo funciona si el origen está autorizado en
-// Google Cloud Console. Hoy https://login.dmdmx.dev NO está autorizado
-// (solo dmd-login.vercel.app y otros); hasta añadirlo, Google rechaza
-// el origen y el frontend muestra el error visible. Añadirlo requiere
-// navegador y NO se puede hacer desde aquí.
+// Google Cloud Console. https://login.dmdmx.dev YA está autorizado
+// (origen #6 del cliente OAuth "DMD Web").
 const crypto = require('crypto');
 const { hasDb, query } = require('../_db');
 const { createSession, setSessionCookie, readBody, quotaOf, noDb } = require('../_auth');
@@ -59,6 +59,50 @@ async function verifyGoogleToken(credential) {
   return p;
 }
 
+async function verifyGoogleAccessToken(accessToken) {
+  const res = await fetch(
+    'https://oauth2.googleapis.com/tokeninfo?access_token=' + encodeURIComponent(accessToken)
+  );
+  if (!res.ok) {
+    const e = new Error('Google no pudo verificar el token');
+    e.code = 'BAD_TOKEN';
+    throw e;
+  }
+  const t = await res.json();
+  if (t.aud !== GOOGLE_CLIENT_ID) {
+    const e = new Error('Token de otra aplicación (aud distinto)');
+    e.code = 'BAD_AUD';
+    throw e;
+  }
+  if (Number(t.expires_in || 0) <= 0) {
+    const e = new Error('Token de Google expirado');
+    e.code = 'EXPIRED';
+    throw e;
+  }
+  if (t.email_verified !== 'true' && t.email_verified !== true) {
+    const e = new Error('Correo de Google no verificado');
+    e.code = 'UNVERIFIED';
+    throw e;
+  }
+  if (!t.email || typeof t.email !== 'string') {
+    const e = new Error('El token no trae correo');
+    e.code = 'NO_EMAIL';
+    throw e;
+  }
+  // El tokeninfo de access_token no trae nombre: se pide a userinfo.
+  let name = '';
+  try {
+    const u = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: 'Bearer ' + accessToken }
+    });
+    if (u.ok) {
+      const p = await u.json();
+      name = String(p.name || p.given_name || '');
+    }
+  } catch (e) { /* sin nombre, se usa el correo */ }
+  return { email: t.email, name };
+}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cache-Control', 'no-store');
@@ -69,12 +113,15 @@ module.exports = async function handler(req, res) {
   if (!hasDb()) return noDb(res);
   const body = readBody(req);
   const credential = String(body.credential || '');
-  if (!credential) {
+  const accessToken = String(body.access_token || '');
+  if (!credential && !accessToken) {
     return res.status(400).json({ error: 'Falta el token de Google.' });
   }
   let payload;
   try {
-    payload = await verifyGoogleToken(credential);
+    payload = accessToken
+      ? await verifyGoogleAccessToken(accessToken)
+      : await verifyGoogleToken(credential);
   } catch (e) {
     console.error('google verify error:', e.code || e.message);
     return res.status(401).json({ error: 'No se pudo verificar tu cuenta de Google. Inténtalo de nuevo.' });

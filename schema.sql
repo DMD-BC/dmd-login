@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
   name TEXT NOT NULL,
   email TEXT NOT NULL,
   pass_hash TEXT NOT NULL,          -- scrypt, nunca en claro; 'google$...' = solo entra con Google
-  promo BOOLEAN NOT NULL DEFAULT FALSE,  -- TRUE = código DMDMX, límite 50
+  promo BOOLEAN NOT NULL DEFAULT FALSE,  -- TRUE = código promocional, límite 50
   used_count INTEGER NOT NULL DEFAULT 0, -- cambios consumidos (límite 25 / 50)
   is_admin BOOLEAN NOT NULL DEFAULT FALSE, -- TRUE = puede entrar a admin.html (NO inventar correos: se marca por DB)
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

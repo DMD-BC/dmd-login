@@ -18,7 +18,7 @@ con token aleatorio (en la DB solo su hash SHA-256) en cookie httpOnly.
 
 - **Correo + contraseña:** `POST /api/auth/register` (nombre, correo,
   contraseña) y `POST /api/auth/login`. `GET /api/auth/me` dice quién está
-  en sesión y su cuota (3 anónimo / 25 registrado / 50 con código DMDMX).
+  en sesión y su cuota (3 anónimo / 25 registrado / 50 con código promocional).
   `POST /api/auth/logout` borra la sesión.
 - **Google:** botón "Continuar con Google" (Google Identity Services).
   El JWT se verifica **en el servidor** (`POST /api/auth/google`) contra

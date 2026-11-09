@@ -25,6 +25,20 @@
     localStorage.removeItem('dmd_admin_password');
   } catch (e) { /* sin storage, nada que limpiar */ }
 
+  // Limpieza de los pedidos de ejemplo ya sembrados en este navegador
+  // (DMD-1024/1025/1026): solo se borran si TODOS son de ejemplo; los
+  // pedidos reales (creados al cotizar) se conservan.
+  try {
+    var storedOrders = localStorage.getItem('dmd_orders');
+    if (storedOrders) {
+      var orders = JSON.parse(storedOrders);
+      var demoFolios = { 'DMD-1024': true, 'DMD-1025': true, 'DMD-1026': true };
+      if (Array.isArray(orders) && orders.length > 0 && orders.every(function (o) { return o && demoFolios[o.folio]; })) {
+        localStorage.removeItem('dmd_orders');
+      }
+    }
+  } catch (e) { /* si no se puede leer, no se toca nada */ }
+
   var meCache = null;
 
   function getMe() {

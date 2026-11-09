@@ -48,229 +48,10 @@
 (function () {
   const STORAGE_KEY = "dmd_ai_creations";
 
-  // Semilla inicial realista de creaciones solicitadas por clientes
-  const SEED_CREATIONS = [
-    {
-      id: "IA-WEB-9201",
-      type: "web",
-      typeLabel: "Página Web Corporativa",
-      typeBadgeClass: "badge-primary",
-      typeIcon: "🌐",
-      title: "Plataforma Educativa Médica Continua",
-      userName: "Cliente DMD (Universidad Santander)",
-      userEmail: "carlos.mendoza@santander.edu.mx",
-      userCompany: "Universidad Santander / Fac. Medicina",
-      plan: "DMD IA Premium ($79 MXN)",
-      isPremiumUser: true,
-      prompt: "Diseñar una plataforma web de educación médica continua con aula virtual, catálogo de diplomados en cardiología y registro de alumnos en línea con colores azul zafiro y blanco clínico.",
-      model: "DMD Lovable AI Web Engine v3.4",
-      date: "02/11/2026, 14:15",
-      timestamp: 1762114500000,
-      status: "Completado",
-      downloadType: "HTML / CSS",
-      source: "dmd-paginas-web-ia.vercel.app",
-      accent: "#2563eb",
-      summary: "Landing completa responsive con 6 secciones: Hero con call-to-action, malla curricular, docentes especialistas, testimonios y formulario de inscripción directa."
-    },
-    {
-      id: "IA-LOGO-8140",
-      type: "logo",
-      typeLabel: "Logotipo Vectorial",
-      typeBadgeClass: "badge-accent",
-      typeIcon: "🎨",
-      title: "Logotipo MedSantander Global",
-      userName: "Cliente DMD (Universidad Santander)",
-      userEmail: "carlos.mendoza@santander.edu.mx",
-      userCompany: "Universidad Santander / Fac. Medicina",
-      plan: "DMD IA Premium ($79 MXN)",
-      isPremiumUser: true,
-      prompt: "Logotipo minimalista moderno con hexágono que entrelaza una cruz médica estilizada y un libro abierto, tipografía geométrica bold en azul cobalto y dorado.",
-      model: "Canva Studio IA (Vector Logo Generator)",
-      date: "02/11/2026, 13:40",
-      timestamp: 1762112400000,
-      status: "Completado",
-      downloadType: "SVG / PNG HD",
-      source: "canva.html",
-      accent: "#6366f1",
-      summary: "Isotipo geométrico vectorial en 4K con variante horizontal y vertical, adaptable a fondos claros y oscuros."
-    },
-    {
-      id: "IA-BAN-7305",
-      type: "banner",
-      typeLabel: "Banner Promocional",
-      typeBadgeClass: "badge-info",
-      typeIcon: "🖼️",
-      title: "Banner Congreso Internacional de Cardiología",
-      userName: "Cliente DMD (Universidad Santander)",
-      userEmail: "carlos.mendoza@santander.edu.mx",
-      userCompany: "Universidad Santander / Fac. Medicina",
-      plan: "DMD IA Premium ($79 MXN)",
-      isPremiumUser: true,
-      prompt: "Banner web horizontal 1200x400 para cabecera de portal: Congreso Anual de Innovación Cardíaca 2026, fecha 15-18 Noviembre, botón de registro y fondo degradado oscuro tech.",
-      model: "Canva Studio IA (Banner Studio Pro)",
-      date: "02/11/2026, 12:20",
-      timestamp: 1762107600000,
-      status: "Completado",
-      downloadType: "PNG / SVG",
-      source: "canva.html",
-      accent: "#0ea5e9",
-      summary: "Banner ultra-nítido optimizado para web con tipografía de alto impacto y llamado a la acción."
-    },
-    {
-      id: "IA-POST-6112",
-      type: "post",
-      typeLabel: "Post para Redes Sociales",
-      typeBadgeClass: "badge-success",
-      typeIcon: "📱",
-      title: "Post Instagram: Convocatoria de Becas Hospitalarias",
-      userName: "Cliente DMD (Universidad Santander)",
-      userEmail: "carlos.mendoza@santander.edu.mx",
-      userCompany: "Universidad Santander / Fac. Medicina",
-      plan: "DMD IA Premium ($79 MXN)",
-      isPremiumUser: true,
-      prompt: "Post cuadrado 1080x1080 para Instagram anunciando apertura de 50 becas completas de posgrado médico, diseño limpio con badge destacado de 100% de cobertura.",
-      model: "Social Posts IA Studio",
-      date: "02/11/2026, 11:05",
-      timestamp: 1762103100000,
-      status: "Completado",
-      downloadType: "PNG / SVG",
-      source: "posts.html",
-      accent: "#10b981",
-      summary: "Formato 1:1 con layout optimizado para engagement, contrastes WCAG AAA y etiquetas de hashtag sugeridas."
-    },
-    {
-      id: "IA-PUB-5089",
-      type: "publicidad",
-      typeLabel: "Anuncio / Flyer Comercial",
-      typeBadgeClass: "badge-warning",
-      typeIcon: "📢",
-      title: "Flyer Comercial: 50% Off Diplomados 2026",
-      userName: "Cliente DMD (Universidad Santander)",
-      userEmail: "carlos.mendoza@santander.edu.mx",
-      userCompany: "Universidad Santander / Fac. Medicina",
-      plan: "DMD IA Premium ($79 MXN)",
-      isPremiumUser: true,
-      prompt: "Flyer vertical de alta conversión para pauta publicitaria en Meta Ads: 'Preinscríbete hoy y asegura 50% de descuento en matrícula de diplomados de especialidad'.",
-      model: "Commercial Flyer & Adverts Engine",
-      date: "02/11/2026, 09:30",
-      timestamp: 1762097400000,
-      status: "Completado",
-      downloadType: "PNG / SVG",
-      source: "publicidad.html",
-      accent: "#f59e0b",
-      summary: "Estructura publicitaria AIDA (Atención, Interés, Deseo, Acción) con distintivo de oferta por tiempo limitado."
-    },
-    {
-      id: "IA-WEB-4981",
-      type: "web",
-      typeLabel: "Página Web Corporativa",
-      typeBadgeClass: "badge-primary",
-      typeIcon: "🌐",
-      title: "Bufete Jurídico Morales & Asociados",
-      userName: "Lic. Mariana Morales",
-      userEmail: "mariana@moralesabogados.com",
-      userCompany: "Morales & Asociados S.C.",
-      plan: "DMD IA Premium ($79 MXN)",
-      isPremiumUser: true,
-      prompt: "Sitio web para despacho legal corporativo enfocado en litigio mercantil y propiedad intelectual, estilo sobrio en azul marino oscuro y dorado, formulario de asesoría urgente.",
-      model: "DMD Lovable AI Web Engine v3.4",
-      date: "01/11/2026, 18:20",
-      timestamp: 1762042800000,
-      status: "Completado",
-      downloadType: "HTML / CSS",
-      source: "dmd-paginas-web-ia.vercel.app",
-      accent: "#1e3a8a",
-      summary: "Sitio corporativo con sección de abogados seniors, casos de éxito, calculadora de honorarios y botón WhatsApp integrado."
-    },
-    {
-      id: "IA-LOGO-3890",
-      type: "logo",
-      typeLabel: "Logotipo Vectorial",
-      typeBadgeClass: "badge-accent",
-      typeIcon: "🎨",
-      title: "Logotipo Balanza & Escudo Morales Law",
-      userName: "Lic. Mariana Morales",
-      userEmail: "mariana@moralesabogados.com",
-      userCompany: "Morales & Asociados S.C.",
-      plan: "DMD IA Premium ($79 MXN)",
-      isPremiumUser: true,
-      prompt: "Logotipo premium con escudo heráldico simplificado y balanza de la justicia en trazo fino dorado con fondo azul noche.",
-      model: "Canva Studio IA (Vector Logo Generator)",
-      date: "01/11/2026, 16:45",
-      timestamp: 1762037100000,
-      status: "Completado",
-      downloadType: "SVG / PNG HD",
-      source: "canva.html",
-      accent: "#eab308",
-      summary: "Emblema heráldico moderno para papelería oficial, tarjetas de presentación y sellos notariales."
-    },
-    {
-      id: "IA-POST-3120",
-      type: "post",
-      typeLabel: "Post para Redes Sociales",
-      typeBadgeClass: "badge-success",
-      typeIcon: "📱",
-      title: "Post LinkedIn: Nueva Reforma Laboral 2026",
-      userName: "Lic. Mariana Morales",
-      userEmail: "mariana@moralesabogados.com",
-      userCompany: "Morales & Asociados S.C.",
-      plan: "DMD IA Premium ($79 MXN)",
-      isPremiumUser: true,
-      prompt: "Infografía cuadrada para LinkedIn resumiendo los 5 puntos clave de la nueva norma laboral para empresas para evitar sanciones.",
-      model: "Social Posts IA Studio",
-      date: "01/11/2026, 14:10",
-      timestamp: 1762027800000,
-      status: "Completado",
-      downloadType: "PNG / SVG",
-      source: "posts.html",
-      accent: "#3b82f6",
-      summary: "Diseño corporativo B2B con viñetas claras y tipografía legible desde pantallas móviles."
-    },
-    {
-      id: "IA-PUB-2780",
-      type: "publicidad",
-      typeLabel: "Anuncio / Flyer Comercial",
-      typeBadgeClass: "badge-warning",
-      typeIcon: "📢",
-      title: "Flyer Menú Degustación Bistró La Toscana",
-      userName: "Chef Roberto Vargas",
-      userEmail: "roberto@bistrolatoscana.mx",
-      userCompany: "Bistró La Toscana Gourmet",
-      plan: "Plan Libre (Gratuito)",
-      isPremiumUser: false,
-      prompt: "Anuncio para redes y cartelería: Cena maridaje de 5 tiempos con vinos italianos, cupo limitado a 25 parejas, reserva anticipada con cóctel de bienvenida gratis.",
-      model: "Commercial Flyer & Adverts Engine",
-      date: "31/10/2026, 20:15",
-      timestamp: 1761963300000,
-      status: "Completado",
-      downloadType: "PNG / SVG",
-      source: "publicidad.html",
-      accent: "#dc2626",
-      summary: "Flyer sensorial con paleta vinotinto y crema, enfocado en experiencia culinaria exclusiva."
-    },
-    {
-      id: "IA-BAN-1994",
-      type: "banner",
-      typeLabel: "Banner Promocional",
-      typeBadgeClass: "badge-info",
-      typeIcon: "🖼️",
-      title: "Banner Lanzamiento Robots Autónomos",
-      userName: "Ing. Daniela Ríos",
-      userEmail: "danielarios@innovatechrobotics.io",
-      userCompany: "InnovaTech Robotics Lab",
-      plan: "DMD IA Premium ($79 MXN)",
-      isPremiumUser: true,
-      prompt: "Banner tecnológico panorámico anunciando la nueva flota de robots móviles AMR con sensores LiDAR para almacenes logísticos.",
-      model: "Canva Studio IA (Banner Studio Pro)",
-      date: "30/10/2026, 11:30",
-      timestamp: 1761845400000,
-      status: "Completado",
-      downloadType: "PNG / SVG",
-      source: "canva.html",
-      accent: "#06b6d4",
-      summary: "Composición futurista con gradiente neón cian/púrpura y llamada al demo técnico presencial."
-    }
-  ];
+  // IDs de las creaciones de ejemplo que se sembraban antes. Una cuenta
+  // nueva empieza EN LIMPIO: si la lista guardada trae SOLO estos IDs,
+  // se considera vacía y se limpia (ver getDmdAiCreations).
+  const SEED_CREATION_IDS = ["IA-WEB-9201", "IA-LOGO-8140", "IA-BAN-7305", "IA-POST-6112", "IA-PUB-5089", "IA-WEB-4981", "IA-LOGO-3890", "IA-POST-3120", "IA-PUB-2780", "IA-BAN-1994"];
 
   // Obtener todas las creaciones
   window.getDmdAiCreations = function () {
@@ -278,16 +59,24 @@
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+        if (Array.isArray(parsed)) {
+          // Las creaciones de ejemplo nunca fueron de ningún usuario: se
+          // quitan de la lista. Si solo quedaban ejemplos, la cuenta
+          // queda en limpio.
+          const seedIds = new Set(SEED_CREATION_IDS);
+          const real = parsed.filter(function (c) { return c && !seedIds.has(c.id); });
+          if (real.length !== parsed.length) {
+            if (real.length === 0) { localStorage.removeItem(STORAGE_KEY); }
+            else { localStorage.setItem(STORAGE_KEY, JSON.stringify(real)); }
+          }
+          return real;
         }
       }
     } catch (e) {
       console.warn("Error leyendo dmd_ai_creations:", e);
     }
-    // Si no existen datos previos, sembrar los registros iniciales
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED_CREATIONS));
-    return SEED_CREATIONS;
+    // Cuenta nueva: en limpio, sin creaciones de ejemplo.
+    return [];
   };
 
   // Guardar una nueva creación pedida por el cliente
@@ -295,9 +84,9 @@
     const list = window.getDmdAiCreations();
     
     // Obtener perfil actual del cliente
-    let clientName = "Cliente DMD (Universidad Santander)";
-    let clientEmail = "carlos.mendoza@santander.edu.mx";
-    let clientCompany = "Universidad Santander";
+    let clientName = "Cliente DMD";
+    let clientEmail = "";
+    let clientCompany = "";
     if (typeof window.getClientProfile === "function") {
       const p = window.getClientProfile();
       if (p && p.name) clientName = p.name;

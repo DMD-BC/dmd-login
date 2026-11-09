@@ -243,7 +243,7 @@
     if (btnAdmin) btnAdmin.style.display = u.is_admin ? 'inline-flex' : 'none';
     var quotaEl = document.getElementById('portalQuotaLine');
     if (quotaEl && me.quota) {
-      quotaEl.textContent = 'Cambios con IA: ' + me.quota.used + ' de ' + me.quota.limit + ' usados' + (me.quota.promo ? ' (código DMDMX activo)' : '') + ' · ' + u.email;
+      quotaEl.textContent = 'Cambios con IA: ' + me.quota.used + ' de ' + me.quota.limit + ' usados' + (me.quota.promo ? ' (código promocional activo)' : '') + ' · ' + u.email;
     }
   }
 

@@ -1,5 +1,5 @@
 /**
- * dmd-tab-titles.js — Títulos dinámicos de pestaña para Digital Mijma Dreams (DMD).
+ * dmd-tab-titles.js — Títulos dinámicos de pestaña para Digital MAJFA Dreams (DMD).
  *
  * Qué hace:
  *  1. Detecta automáticamente la sección actual (por subdominio y por ruta)
@@ -27,17 +27,17 @@
 
   /** Títulos profesionales por sección. */
   var TITULOS = {
-    inicio: 'Digital Mijma Dreams | Constructor IA & Desarrollo Web Profesional',
+    inicio: 'Digital MAJFA Dreams | Constructor IA & Desarrollo Web Profesional',
     canva: 'Diseño Gráfico & Portadas Gratis | Estudio Canva DMD Pro',
     pos: 'Demos de Puntos de Venta (POS) Listos para Usar | TkPOS DMD',
     contenido: 'Creador de Contenido & Anuncios con IA | DMD Pro',
-    portafolio: 'Proyectos Desarrollados y Casos de Impacto | Digital Mijma Dreams',
-    servicios: 'Servicios de Ingeniería de Software & SaaS | Digital Mijma Dreams',
-    planes: 'Suscripciones Mensuales y Planes Transparentes | Digital Mijma Dreams',
+    portafolio: 'Proyectos Desarrollados y Casos de Impacto | Digital MAJFA Dreams',
+    servicios: 'Servicios de Ingeniería de Software & SaaS | Digital MAJFA Dreams',
+    planes: 'Suscripciones Mensuales y Planes Transparentes | Digital MAJFA Dreams',
     dominios: '🔍 Comprobar y Registrar Disponibilidad de Dominio | DMD',
-    checkout: '💳 Completar tu Suscripción Segura | Digital Mijma Dreams',
+    checkout: '💳 Completar tu Suscripción Segura | Digital MAJFA Dreams',
     legal: 'Legal: Aviso de Privacidad & Cumplimiento LFPDPPP | DMD',
-    respaldo: 'Digital Mijma Dreams | Innovación & Desarrollo Web'
+    respaldo: 'Digital MAJFA Dreams | Innovación & Desarrollo Web'
   };
 
   /**

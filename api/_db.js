@@ -24,7 +24,9 @@ function getPool() {
     const { Pool } = require('pg');
     pool = new Pool({
       connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false },
+      // SSL seguro por defecto, igual que el builder: solo se relaja si
+      // DB_SSL_STRICT=0 está explícito en Vercel.
+      ssl: process.env.DB_SSL_STRICT === '0' ? { rejectUnauthorized: false } : { rejectUnauthorized: true },
       max: 2,
       idleTimeoutMillis: 10000,
       connectionTimeoutMillis: 5000
@@ -74,6 +76,17 @@ CREATE TABLE IF NOT EXISTS anon_usage (
   count INTEGER NOT NULL DEFAULT 0,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+CREATE TABLE IF NOT EXISTS otp_codes (
+  id TEXT PRIMARY KEY,
+  email TEXT NOT NULL,
+  code_hash TEXT NOT NULL,
+  ip_hash TEXT NOT NULL DEFAULT '',
+  attempts INTEGER NOT NULL DEFAULT 0,
+  used BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  expires_at TIMESTAMPTZ NOT NULL
+);
+CREATE INDEX IF NOT EXISTS otp_codes_email_idx ON otp_codes (LOWER(email), created_at DESC);
 `;
 
 async function ensureSchema() {

@@ -746,7 +746,7 @@
             </div>
             <div id="dmdPayPanel_spei" style="display:none; background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:14px; margin-bottom:14px;">
               <div style="font-size:0.82rem; font-weight:800; color:#0f172a; margin-bottom:6px;">Transferencia SPEI (Sin comisiones):</div>
-              <div style="font-size:0.78rem; line-height:1.4; background:#fff; padding:8px; border-radius:6px; border:1px solid #e2e8f0; margin-bottom:10px;">CLABE: <strong style="color:#1e40af;">646180123456789012</strong><br>Banco: BBVA / STP · Titular: DMD Tech ($79.00 MXN)</div>
+              <div style="font-size:0.78rem; line-height:1.4; background:#fff; padding:8px; border-radius:6px; border:1px solid #e2e8f0; margin-bottom:10px;">CLABE: <strong style="color:#1e40af;">722969069842378198</strong><br>Banco: Mercado Pago · Titular: DMD Tech ($79.00 MXN)</div>
               <button type="button" class="btn btn-primary" onclick="window.activatePremiumSubscription('SPEI')" style="width:100%; height:38px; justify-content:center; font-size:0.82rem; font-weight:800; background:#059669; border:none;">✔ Confirmar Transferencia ($79 MXN)</button>
             </div>
             <div id="dmdPayPanel_oxxo" style="display:none; background:#fffbeb; border:1px solid #fde68a; border-radius:12px; padding:14px; margin-bottom:14px; text-align:center;">

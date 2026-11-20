@@ -15,7 +15,7 @@
 const crypto = require('crypto');
 const { hasDb, query } = require('../_db');
 const {
-  scryptHash, scryptVerify, createSession, setSessionCookie,
+  handleCors, scryptHash, scryptVerify, createSession, setSessionCookie,
   readBody, quotaOf, ipHash, noDb
 } = require('../_auth');
 
@@ -141,17 +141,8 @@ async function handleVerify(req, res, email, code) {
 module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cache-Control', 'no-store');
-  // CORS: el modal de www.dmdmx.dev usa este endpoint desde otro origen.
-  // Solo se refleja el origen si es dmdmx.dev (www, crear, etc.).
-  const origin = req.headers.origin || '';
-  if (/^https:\/\/([a-z0-9-]+\.)*dmdmx\.dev$/.test(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Vary', 'Origin');
-  }
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  if (req.method === 'OPTIONS') return res.status(204).end();
+  // CORS centralizado (mismos orígenes permitidos que el resto de la API).
+  if (!handleCors(req, res, 'POST, OPTIONS')) return;
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Método no permitido, usa POST' });

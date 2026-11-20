@@ -1,10 +1,4 @@
-// api/_db.js — Acceso a Postgres para cuentas, cuota y proyectos.
-// MISMA base de datos que el builder (crear.dmdmx.dev): process.env.
-// DATABASE_URL. Sin ella, query() lanza con code 'NO_DB' y cada
-// endpoint responde 503 { db:false }.
-// La única diferencia con el builder: la tabla users lleva además
-// is_admin (BOOLEAN, FALSE por defecto). El ALTER de abajo la añade
-// a bases ya creadas por el builder, sin tocar nada más.
+// api/_db.js — Acceso a Postgres para cuentas, cuota, sesiones, recuperación y rate limiting.
 let pool = null;
 let schemaReady = false;
 
@@ -19,13 +13,9 @@ function getPool() {
     throw e;
   }
   if (!pool) {
-    // 'pg' es dependencia del repo (package.json). Pool pequeño:
-    // las funciones serverless son efímeras, 2 conexiones bastan.
     const { Pool } = require('pg');
     pool = new Pool({
       connectionString: process.env.DATABASE_URL,
-      // SSL seguro por defecto, igual que el builder: solo se relaja si
-      // DB_SSL_STRICT=0 está explícito en Vercel.
       ssl: process.env.DB_SSL_STRICT === '0' ? { rejectUnauthorized: false } : { rejectUnauthorized: true },
       max: 2,
       idleTimeoutMillis: 10000,
@@ -35,8 +25,6 @@ function getPool() {
   return pool;
 }
 
-// DDL idempotente (mismo contenido que schema.sql, para que el primer
-// uso cree las tablas sin migración manual).
 const SCHEMA_SQL = `
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
@@ -48,9 +36,9 @@ CREATE TABLE IF NOT EXISTS users (
   is_admin BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
--- La DB ya existe (la creó el builder): añade is_admin si falta.
 ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN NOT NULL DEFAULT FALSE;
 CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique ON users (LOWER(email));
+
 CREATE TABLE IF NOT EXISTS sessions (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
@@ -59,6 +47,7 @@ CREATE TABLE IF NOT EXISTS sessions (
   expires_at TIMESTAMPTZ NOT NULL
 );
 CREATE INDEX IF NOT EXISTS sessions_user_idx ON sessions (user_id);
+
 CREATE TABLE IF NOT EXISTS projects (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
@@ -71,11 +60,13 @@ CREATE TABLE IF NOT EXISTS projects (
   UNIQUE (user_id, slug)
 );
 CREATE INDEX IF NOT EXISTS projects_user_idx ON projects (user_id, updated_at DESC);
+
 CREATE TABLE IF NOT EXISTS anon_usage (
   ip_hash TEXT PRIMARY KEY,
   count INTEGER NOT NULL DEFAULT 0,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
 CREATE TABLE IF NOT EXISTS otp_codes (
   id TEXT PRIMARY KEY,
   email TEXT NOT NULL,
@@ -87,6 +78,25 @@ CREATE TABLE IF NOT EXISTS otp_codes (
   expires_at TIMESTAMPTZ NOT NULL
 );
 CREATE INDEX IF NOT EXISTS otp_codes_email_idx ON otp_codes (LOWER(email), created_at DESC);
+
+CREATE TABLE IF NOT EXISTS password_resets (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  token_hash TEXT NOT NULL,
+  ip_hash TEXT NOT NULL DEFAULT '',
+  used BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  expires_at TIMESTAMPTZ NOT NULL
+);
+CREATE INDEX IF NOT EXISTS password_resets_email_idx ON password_resets (LOWER(email), created_at DESC);
+CREATE INDEX IF NOT EXISTS password_resets_user_idx ON password_resets (user_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS auth_rate_limits (
+  bucket_key TEXT PRIMARY KEY,
+  attempts INTEGER NOT NULL DEFAULT 0,
+  window_start TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
 `;
 
 async function ensureSchema() {

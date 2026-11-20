@@ -1,48 +1,79 @@
-// POST /api/auth/register — Crea la cuenta EN EL SERVIDOR (Postgres).
-// Body: { name, email, password }. La contraseña se hashea con scrypt
-// en el servidor y jamás se guarda en claro ni se devuelve.
-// Cuenta nueva: used_count = 0 y SIN proyectos (la lista empieza vacía;
-// al iniciar sesión solo aparecen los proyectos guardados en la DB).
-// Responde 201 + cookie de sesión httpOnly. Sin DATABASE_URL -> 503 db:false.
+// POST /api/auth/register — Crea cuenta en Postgres con contraseña mínimo 6 caracteres,
+// CORS centralizado y límite de registros por IP.
 const crypto = require('crypto');
 const { hasDb, query } = require('../_db');
-const { scryptHash, createSession, setSessionCookie, readBody, quotaOf, noDb } = require('../_auth');
+const {
+  handleCors,
+  scryptHash,
+  createSession,
+  setSessionCookie,
+  readBody,
+  quotaOf,
+  ipHash,
+  checkRateLimit,
+  noDb
+} = require('../_auth');
+
+const REGISTER_WINDOW_SEC = 60 * 60; // 1 hora
+const MAX_REGISTERS_PER_IP = 8;
 
 module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cache-Control', 'no-store');
+
+  if (!handleCors(req, res, 'POST, OPTIONS')) return;
+
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Método no permitido, usa POST' });
+    res.setHeader('Allow', 'POST, OPTIONS');
+    return res.status(405).json({ error: 'Método no permitido, usa POST.' });
   }
   if (!hasDb()) return noDb(res);
+
   const body = readBody(req);
-  const name = String(body.name || '').trim();
+  const name = String(body.name || '').replace(/\s+/g, ' ').trim();
   const email = String(body.email || '').trim().toLowerCase();
   const password = String(body.password || '');
-  if (name.length < 2) return res.status(400).json({ error: 'Escribe tu nombre.' });
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+
+  if (name.length < 2 || name.length > 60) {
+    return res.status(400).json({ error: 'Escribe tu nombre (entre 2 y 60 caracteres).' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || email.length > 180) {
     return res.status(400).json({ error: 'Ese correo no se ve válido.' });
   }
-  if (password.length < 4) {
-    return res.status(400).json({ error: 'La contraseña necesita al menos 4 caracteres.' });
+  if (password.length < 6) {
+    return res.status(400).json({ error: 'La contraseña necesita al menos 6 caracteres.' });
   }
+
   try {
+    const ipLimit = await checkRateLimit('reg_ip:' + ipHash(req), MAX_REGISTERS_PER_IP, REGISTER_WINDOW_SEC);
+    if (!ipLimit.allowed) {
+      res.setHeader('Retry-After', String(ipLimit.retryAfterSec));
+      return res.status(429).json({
+        error: 'Demasiados intentos de registro desde esta conexión. Inténtalo más tarde.'
+      });
+    }
+
     const existing = await query('SELECT id FROM users WHERE LOWER(email) = $1', [email]);
     if (existing.rows.length) {
       return res.status(409).json({ error: 'Ese correo ya tiene cuenta. Inicia sesión.' });
     }
+
     const id = crypto.randomUUID();
     await query(
       'INSERT INTO users (id, name, email, pass_hash, promo, used_count) VALUES ($1, $2, $3, $4, FALSE, 0)',
       [id, name, email, scryptHash(password)]
     );
+
     const token = await createSession(id);
     setSessionCookie(res, token, req);
     const user = { id, name, email, promo: false, used_count: 0, is_admin: false };
+
     return res.status(201).json({
-      ok: true, db: true, user: { id, name, email, is_admin: false },
-      quota: quotaOf(user), projects: []
+      ok: true,
+      db: true,
+      user: { id, name, email, is_admin: false },
+      quota: quotaOf(user),
+      projects: []
     });
   } catch (e) {
     if (e.code === 'NO_DB') return noDb(res);

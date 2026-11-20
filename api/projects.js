@@ -7,7 +7,7 @@
 // /api/auth/*, compartida por SSO en .dmdmx.dev). Sin sesión -> 401.
 // Sin DATABASE_URL -> 503 { db:false }.
 const { hasDb, query } = require('./_db');
-const { getSessionUser, noDb } = require('./_auth');
+const { handleCors, getSessionUser, noDb } = require('./_auth');
 
 function slugify(s) {
   return String(s || 'mi-app').toLowerCase()
@@ -30,6 +30,9 @@ function publicProject(row) {
 module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cache-Control', 'no-store');
+
+  if (!handleCors(req, res)) return;
+
   if (!hasDb()) return noDb(res);
   try {
     const user = await getSessionUser(req);

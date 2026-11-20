@@ -2,11 +2,14 @@
 // Requiere sesión. Pone users.promo = TRUE: el límite sube a 50.
 // Sin DATABASE_URL -> 503 db:false.
 const { hasDb, query } = require('../_db');
-const { getSessionUser, readBody, quotaOf, noDb } = require('../_auth');
+const { handleCors, getSessionUser, readBody, quotaOf, noDb } = require('../_auth');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cache-Control', 'no-store');
+
+  if (!handleCors(req, res, 'POST, OPTIONS')) return;
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Método no permitido, usa POST' });

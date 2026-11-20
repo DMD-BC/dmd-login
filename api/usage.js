@@ -7,7 +7,7 @@
 //     Sin DATABASE_URL -> 503 { db:false } y el cliente usa su
 //     contador local anónimo (3) hasta que se conecte la DB.
 const { hasDb, query } = require('./_db');
-const { getSessionUser, quotaOf, ipHash, readBody, noDb } = require('./_auth');
+const { handleCors, getSessionUser, quotaOf, ipHash, readBody, noDb } = require('./_auth');
 
 function remainingOf(q) {
   return { used: q.used, limit: q.limit, promo: q.promo, remaining: Math.max(0, q.limit - q.used) };
@@ -16,6 +16,9 @@ function remainingOf(q) {
 module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cache-Control', 'no-store');
+
+  if (!handleCors(req, res)) return;
+
   if (!hasDb()) {
     if (req.method === 'GET') {
       return res.status(200).json({ db: false, user: null, quota: { used: 0, limit: 3, promo: false, remaining: 3 } });

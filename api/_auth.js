@@ -1,24 +1,70 @@
-// api/_auth.js — Contraseñas y sesiones EN EL SERVIDOR.
-// - Contraseña: scrypt (node:crypto) con sal aleatoria. Nunca se
-//   guarda en claro, nunca viaja al cliente, nunca se registra.
-// - Sesión: token aleatorio de 32 bytes; en la DB solo se guarda su
-//   hash SHA-256. Al navegador va en cookie httpOnly (el JS no la
-//   puede leer: no hay XSS que robe la sesión desde el frontend).
-// - Cookie: httpOnly, SameSite=Lax, Path=/, 30 días, Secure en
-//   producción (Vercel es https). SSO DMD: cuando el host es un
-//   subdominio de dmdmx.dev (login.dmdmx.dev, crear.dmdmx.dev...),
-//   la cookie lleva Domain=.dmdmx.dev y la comparten TODOS los
-//   subdominios: iniciar sesión en login.dmdmx.dev vale también en
-//   crear.dmdmx.dev y viceversa. En local/dev (localhost, *.vercel.app)
-//   NO se pone Domain: la cookie queda host-only y sigue funcionando.
-
+// api/_auth.js — Contraseñas, sesiones, CORS centralizado, validación return_to y rate limiting.
 const crypto = require('crypto');
 
 const SESSION_COOKIE = 'dmd_session';
 const SESSION_DAYS = 30;
 const SSO_DOMAIN = '.dmdmx.dev';
 
-// Dominio de la cookie SSO, o '' fuera de *.dmdmx.dev (local/dev).
+const ALLOWED_ORIGIN_PATTERNS = [
+  /^https:\/\/dmdmx\.dev$/i,
+  /^https:\/\/([a-z0-9-]+\.)+dmdmx\.dev$/i,
+  /^https:\/\/dmd-rho\.vercel\.app$/i,
+  /^http:\/\/localhost:3000$/i
+];
+
+function isAllowedOrigin(origin) {
+  if (!origin || typeof origin !== 'string') return false;
+  return ALLOWED_ORIGIN_PATTERNS.some((re) => re.test(origin.trim()));
+}
+
+// Aplica encabezados CORS centralizados y responde preflight OPTIONS.
+// Devuelve true si la petición puede continuar; false si ya fue respondida (403 o 204).
+function handleCors(req, res, methods) {
+  const allowedMethods = methods || 'GET, POST, OPTIONS';
+  const origin = req.headers && req.headers.origin;
+
+  if (origin) {
+    res.setHeader('Vary', 'Origin');
+    if (!isAllowedOrigin(origin)) {
+      res.status(403).json({ error: 'Origen no permitido.' });
+      return false;
+    }
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', allowedMethods);
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+    res.setHeader('Access-Control-Max-Age', '86400');
+  }
+
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Allow', allowedMethods);
+    res.status(204).end();
+    return false;
+  }
+
+  return true;
+}
+
+// Valida return_to para Google SSO contra los orígenes permitidos (evita Open Redirect).
+// Devuelve la URL normalizada válida o null si es inválida o externa.
+function validateReturnTo(rawReturnTo) {
+  if (!rawReturnTo || typeof rawReturnTo !== 'string') return null;
+  const trimmed = rawReturnTo.trim();
+  if (!trimmed || trimmed.length > 1024) return null;
+  try {
+    const parsed = new URL(trimmed);
+    if (!isAllowedOrigin(parsed.origin)) return null;
+    if (parsed.username || parsed.password) return null;
+    return parsed.toString();
+  } catch (e) {
+    return null;
+  }
+}
+
+function defaultReturnUrl() {
+  return 'https://dmd.dmdmx.dev/app.html';
+}
+
 function cookieDomain(req) {
   const raw = (req.headers && (req.headers['x-forwarded-host'] || req.headers.host)) || '';
   const host = String(raw).split(',')[0].trim().toLowerCase().split(':')[0];
@@ -59,7 +105,11 @@ function parseCookies(req) {
   raw.split(';').forEach((part) => {
     const idx = part.indexOf('=');
     if (idx === -1) return;
-    out[part.slice(0, idx).trim()] = decodeURIComponent(part.slice(idx + 1).trim());
+    try {
+      out[part.slice(0, idx).trim()] = decodeURIComponent(part.slice(idx + 1).trim());
+    } catch (e) {
+      out[part.slice(0, idx).trim()] = part.slice(idx + 1).trim();
+    }
   });
   return out;
 }
@@ -73,22 +123,24 @@ function setSessionCookie(res, token, req) {
   const maxAge = SESSION_DAYS * 24 * 60 * 60;
   const secure = isSecureRequest(req) ? '; Secure' : '';
   const domain = cookieDomain(req);
-  res.setHeader('Set-Cookie',
+  res.setHeader(
+    'Set-Cookie',
     SESSION_COOKIE + '=' + encodeURIComponent(token) +
     '; HttpOnly; SameSite=Lax; Path=/; Max-Age=' + maxAge +
-    (domain ? '; Domain=' + domain : '') + secure);
+    (domain ? '; Domain=' + domain : '') + secure
+  );
 }
 
 function clearSessionCookie(res, req) {
   const secure = isSecureRequest(req) ? '; Secure' : '';
   const domain = cookieDomain(req);
-  res.setHeader('Set-Cookie',
+  res.setHeader(
+    'Set-Cookie',
     SESSION_COOKIE + '=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0' +
-    (domain ? '; Domain=' + domain : '') + secure);
+    (domain ? '; Domain=' + domain : '') + secure
+  );
 }
 
-// Devuelve el usuario de la sesión (o null). Nunca lanza por falta de DB:
-// si no hay DB, simplemente no hay sesión.
 async function getSessionUser(req) {
   try {
     const { query } = require('./_db');
@@ -145,6 +197,45 @@ function ipHash(req) {
   return crypto.createHash('sha256').update(clientIp(req)).digest('hex');
 }
 
+function bucketHash(prefix, value) {
+  return prefix + ':' + crypto.createHash('sha256').update(String(value || '')).digest('hex');
+}
+
+// Rate limiter respaldado en Postgres para funciones serverless.
+// Incrementa el contador dentro de una ventana de windowSec segundos y devuelve { allowed, retryAfterSec }.
+async function checkRateLimit(bucketKey, maxAttempts, windowSec) {
+  const { query } = require('./_db');
+  const res = await query(
+    `INSERT INTO auth_rate_limits (bucket_key, attempts, window_start)
+     VALUES ($1, 1, NOW())
+     ON CONFLICT (bucket_key) DO UPDATE SET
+       attempts = CASE
+         WHEN auth_rate_limits.window_start <= NOW() - ($2 || ' seconds')::interval THEN 1
+         ELSE auth_rate_limits.attempts + 1
+       END,
+       window_start = CASE
+         WHEN auth_rate_limits.window_start <= NOW() - ($2 || ' seconds')::interval THEN NOW()
+         ELSE auth_rate_limits.window_start
+       END
+     RETURNING attempts, EXTRACT(EPOCH FROM (window_start + ($2 || ' seconds')::interval - NOW()))::int AS retry_after`,
+    [bucketKey, String(windowSec)]
+  );
+  const row = res.rows[0];
+  const attempts = row ? row.attempts : 1;
+  const retryAfterSec = Math.max(1, (row && row.retry_after) || windowSec);
+  return {
+    allowed: attempts <= maxAttempts,
+    retryAfterSec
+  };
+}
+
+async function resetRateLimit(bucketKey) {
+  try {
+    const { query } = require('./_db');
+    await query('DELETE FROM auth_rate_limits WHERE bucket_key = $1', [bucketKey]);
+  } catch (e) { /* ignorar error de limpieza */ }
+}
+
 function readBody(req) {
   if (!req.body) return {};
   if (typeof req.body === 'object') return req.body;
@@ -164,6 +255,10 @@ function noDb(res) {
 module.exports = {
   SESSION_COOKIE,
   SSO_DOMAIN,
+  isAllowedOrigin,
+  handleCors,
+  validateReturnTo,
+  defaultReturnUrl,
   cookieDomain,
   scryptHash,
   scryptVerify,
@@ -178,6 +273,9 @@ module.exports = {
   quotaOf,
   clientIp,
   ipHash,
+  bucketHash,
+  checkRateLimit,
+  resetRateLimit,
   readBody,
   noDb
 };

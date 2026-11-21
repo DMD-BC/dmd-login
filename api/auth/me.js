@@ -1,4 +1,4 @@
-// GET /api/auth/me — Devuelve el usuario autenticado y su cuota, o user:null si no hay sesión.
+// GET /api/auth/me — Devuelve el usuario autenticado con su perfil, teléfono y cuota, o user:null si no hay sesión.
 const { hasDb, query } = require('../_db');
 const { handleCors, getSessionUser, quotaOf, ipHash } = require('../_auth');
 
@@ -22,7 +22,18 @@ module.exports = async function handler(req, res) {
     if (user) {
       return res.status(200).json({
         db: true,
-        user: { id: user.id, name: user.name, email: user.email, is_admin: !!user.is_admin },
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          is_admin: !!user.is_admin,
+          username: user.username || null,
+          bio: user.bio || null,
+          website: user.website || null,
+          avatar: user.avatar || null,
+          phone: user.phone || null,
+          phone_verified: !!user.phone_verified
+        },
         quota: quotaOf(user)
       });
     }

@@ -1,4 +1,4 @@
-// api/_db.js — Acceso a Postgres para cuentas, cuota, sesiones, recuperación y rate limiting.
+// api/_db.js — Acceso a Postgres para cuentas, cuota, sesiones, recuperación, teléfono y rate limiting.
 let pool = null;
 let schemaReady = false;
 
@@ -34,10 +34,25 @@ CREATE TABLE IF NOT EXISTS users (
   promo BOOLEAN NOT NULL DEFAULT FALSE,
   used_count INTEGER NOT NULL DEFAULT 0,
   is_admin BOOLEAN NOT NULL DEFAULT FALSE,
+  phone TEXT,
+  phone_verified BOOLEAN NOT NULL DEFAULT FALSE,
+  username TEXT,
+  bio TEXT,
+  website TEXT,
+  avatar TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS phone_verified BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS username TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS bio TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS website TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar TEXT;
+
 CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique ON users (LOWER(email));
+CREATE UNIQUE INDEX IF NOT EXISTS users_username_unique ON users (LOWER(username)) WHERE username IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS users_phone_unique ON users (phone) WHERE phone IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS sessions (
   id TEXT PRIMARY KEY,
@@ -78,6 +93,18 @@ CREATE TABLE IF NOT EXISTS otp_codes (
   expires_at TIMESTAMPTZ NOT NULL
 );
 CREATE INDEX IF NOT EXISTS otp_codes_email_idx ON otp_codes (LOWER(email), created_at DESC);
+
+CREATE TABLE IF NOT EXISTS phone_otp_codes (
+  id TEXT PRIMARY KEY,
+  phone TEXT NOT NULL,
+  code_hash TEXT NOT NULL,
+  ip_hash TEXT NOT NULL DEFAULT '',
+  attempts INTEGER NOT NULL DEFAULT 0,
+  used BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  expires_at TIMESTAMPTZ NOT NULL
+);
+CREATE INDEX IF NOT EXISTS phone_otp_codes_phone_idx ON phone_otp_codes (phone, created_at DESC);
 
 CREATE TABLE IF NOT EXISTS password_resets (
   id TEXT PRIMARY KEY,

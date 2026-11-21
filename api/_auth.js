@@ -45,8 +45,26 @@ function handleCors(req, res, methods) {
   return true;
 }
 
+// Normaliza y valida teléfono a formato E.164 con +.
+// Acepta 10 dígitos (+52), 12 dígitos iniciando con 52 (+), o formato internacional con +.
+// Devuelve la cadena E.164 normalizada o null si es inválida.
+function normalizePhone(raw) {
+  if (raw === null || raw === undefined) return null;
+  const cleaned = String(raw).replace(/[\s-]+/g, '').trim();
+  if (!cleaned) return null;
+  if (/^\d{10}$/.test(cleaned)) {
+    return '+52' + cleaned;
+  }
+  if (/^52\d{10}$/.test(cleaned)) {
+    return '+' + cleaned;
+  }
+  if (/^\+[1-9]\d{7,14}$/.test(cleaned)) {
+    return cleaned;
+  }
+  return null;
+}
+
 // Valida return_to para Google SSO contra los orígenes permitidos (evita Open Redirect).
-// Devuelve la URL normalizada válida o null si es inválida o externa.
 function validateReturnTo(rawReturnTo) {
   if (!rawReturnTo || typeof rawReturnTo !== 'string') return null;
   const trimmed = rawReturnTo.trim();
@@ -148,7 +166,8 @@ async function getSessionUser(req) {
     const token = cookies[SESSION_COOKIE];
     if (!token) return null;
     const rows = await query(
-      'SELECT u.id, u.name, u.email, u.promo, u.used_count, u.is_admin, u.created_at ' +
+      'SELECT u.id, u.name, u.email, u.promo, u.used_count, u.is_admin, ' +
+      'u.phone, u.phone_verified, u.username, u.bio, u.website, u.avatar, u.created_at ' +
       'FROM sessions s JOIN users u ON u.id = s.user_id ' +
       'WHERE s.token_hash = $1 AND s.expires_at > NOW()',
       [hashToken(token)]
@@ -201,8 +220,6 @@ function bucketHash(prefix, value) {
   return prefix + ':' + crypto.createHash('sha256').update(String(value || '')).digest('hex');
 }
 
-// Rate limiter respaldado en Postgres para funciones serverless.
-// Incrementa el contador dentro de una ventana de windowSec segundos y devuelve { allowed, retryAfterSec }.
 async function checkRateLimit(bucketKey, maxAttempts, windowSec) {
   const { query } = require('./_db');
   const res = await query(
@@ -257,6 +274,7 @@ module.exports = {
   SSO_DOMAIN,
   isAllowedOrigin,
   handleCors,
+  normalizePhone,
   validateReturnTo,
   defaultReturnUrl,
   cookieDomain,

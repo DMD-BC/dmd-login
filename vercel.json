@@ -18,6 +18,15 @@
     "api/auth/otp.js": {
       "maxDuration": 30
     },
+    "api/auth/phone-otp/send.js": {
+      "maxDuration": 30
+    },
+    "api/auth/phone-otp/verify.js": {
+      "maxDuration": 30
+    },
+    "api/auth/profile.js": {
+      "maxDuration": 30
+    },
     "api/auth/promo.js": {
       "maxDuration": 30
     },

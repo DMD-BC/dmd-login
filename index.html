@@ -1,361 +1,279 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-MX">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DMD | Digital MAJFA Dreams</title>
+  <meta name="color-scheme" content="light dark">
+  <title>Iniciar sesión | dmd</title>
+  <meta name="description" content="Inicia sesión o crea tu cuenta en dmd para administrar tu acceso y tus proyectos.">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <meta name="description" content="Acceso seguro al portal corporativo de DMD. Gestión de proyectos, bocetos de Canva Studio y seguimiento con autenticación Google y correo con contraseña.">
-<link rel="stylesheet" href="https://www.dmdmx.dev/style.css">
-  <link rel="stylesheet" href="lovable-theme.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
-    <meta property="og:type" content="website">
-  <meta property="og:site_name" content="DMD | Digital MAJFA Dreams">
-  <meta property="og:title" content="Iniciar Sesión · Portal Corporativo | DMD">
-  <meta property="og:description" content="Acceso seguro al portal corporativo de DMD. Gestión de proyectos, bocetos de Canva Studio y seguimiento con autenticación Google y correo con contraseña.">
-  <meta property="og:image" content="https://www.dmdmx.dev/assets/social/og-dmd.jpg">
-  <meta property="og:image:secure_url" content="https://www.dmdmx.dev/assets/social/og-dmd.jpg">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Iniciar Sesión · Portal Corporativo | DMD · DMD Digital MAJFA Dreams">
-  <meta property="og:url" content="https://login.dmdmx.dev/">
-  <meta property="og:locale" content="es_MX">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Iniciar Sesión · Portal Corporativo | DMD">
-  <meta name="twitter:description" content="Acceso seguro al portal corporativo de DMD. Gestión de proyectos, bocetos de Canva Studio y seguimiento con autenticación Google y correo con contraseña.">
-  <meta name="twitter:image" content="https://www.dmdmx.dev/assets/social/og-dmd.jpg">
-  <meta name="twitter:image:alt" content="Iniciar Sesión · Portal Corporativo | DMD · DMD Digital MAJFA Dreams">
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  <!-- Twitter / X Card Meta Tags -->
-  
-  
-  
-  
-<style>
-<!-- Menú píldora DMD -->
-/* Menú píldora DMD — copia exacta del menú del constructor (crear.dmdmx.dev/index.html).
-   Píldora flotante: border-radius:9999px, fondo blanco translúcido con blur y sombra de anillo.
-   Todo bajo .nav para no tocar ningún otro estilo de la página. */
-.nav{position:fixed;top:14px;left:0;right:0;z-index:20}
-.nav-in{position:relative;max-width:1120px;margin:0 auto;padding:8px 10px 8px 18px;display:flex;align-items:center;justify-content:space-between;background:rgba(252,251,248,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:9999px;box-shadow:0 0 0 1px rgba(28,28,28,.06)}
-.nav a{text-decoration:none;color:inherit}
-.nav .brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:-.04em;font-size:17px;min-width:0;overflow:hidden;color:#1c1c1c}
-.nav .brand__mark{width:26px;height:26px;border-radius:7px;flex:none}
-.nav .brand__sub{white-space:nowrap}
-.nav .links{display:flex;gap:6px}
-.nav .links a{padding:8px 14px;border-radius:9999px;font-size:14px;color:rgba(28,28,28,.8)}
-.nav .links a:hover{background:rgba(28,28,28,.05)}
-.nav .acts{display:flex;gap:6px;align-items:center}
-.nav .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 18px;border-radius:9999px;font:500 14px/1.4 "Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;border:0;cursor:pointer;transition:opacity .15s,background .15s;white-space:nowrap}
-.nav .btn:active{opacity:.8}
-.nav .btn-dark{background:#1c1c1c;color:#fcfbf8;box-shadow:rgba(255,255,255,.2) 0 .5px 0 0 inset,rgba(0,0,0,.2) 0 0 0 .5px inset,rgba(0,0,0,.05) 0 1px 2px 0}
-.nav .btn-dark:hover{background:#000}
-.nav .btn-ghost{background:transparent;color:#1c1c1c}
-.nav .btn-ghost:hover{background:rgba(28,28,28,.05)}
-.nav .nav-toggle{display:none}
-.nav .nav-drop{display:none}
-body.has-pill-nav{padding-top:72px}
-@media(max-width:860px){
-  .nav .links{display:none}
-  .nav{left:12px;right:12px;top:12px}
-  .nav-in{padding:6px 8px 6px 14px;gap:8px;min-width:0}
-  .nav .brand{font-size:16px;gap:8px;white-space:nowrap;flex:none}
-  .nav .acts{gap:4px;flex:none}
-  .nav .acts .btn{padding:9px 14px;min-height:44px}
-  .nav .nav-toggle{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border-radius:50%;border:0;background:transparent;font-size:18px;cursor:pointer;color:#1c1c1c}
-  .nav .nav-toggle:hover{background:rgba(28,28,28,.05)}
-  .nav .nav-drop{display:block;position:absolute;top:calc(100% + 8px);left:0;right:0;background:#fcfbf8;border-radius:16px;box-shadow:0 0 0 1px rgba(28,28,28,.08),0 20px 50px -16px rgba(60,30,40,.3);padding:8px;z-index:30}
-  .nav .nav-drop[hidden]{display:none}
-  .nav .nav-drop a{display:flex;align-items:center;min-height:44px;padding:10px 14px;border-radius:12px;font-size:15px;color:#1c1c1c}
-  .nav .nav-drop a:hover{background:rgba(28,28,28,.05)}
-  .nav .nav-drop a.cta-in-menu{background:#1c1c1c;color:#fcfbf8;justify-content:center;font-weight:500;margin-top:6px}
-}
-@media(max-width:480px){
-  .nav .acts .btn-ghost{display:none}
-  .nav .brand{font-size:15px}
-  .nav .brand__sub{display:none}
-}
-</style>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
 </head>
-<body class="login-page has-pill-nav" style="padding-bottom: 220px !important;">
-<header class="nav">
-  <div class="nav-in">
-    <a class="brand" href="https://crear.dmdmx.dev/" aria-label="Inicio"><img class="brand__mark" src="/favicon.svg" alt="DMD" /><span>DMD</span><span class="brand__sub"> | Portal</span></a>
-    <nav class="links" aria-label="Principal">
-      <a href="https://crear.dmdmx.dev/#product">Producto</a><a href="https://crear.dmdmx.dev/#templates">Ejemplos</a><a href="https://crear.dmdmx.dev/editor-ia.html">Editor IA</a><a href="https://crear.dmdmx.dev/#pricing">Precios</a><a href="https://crear.dmdmx.dev/#faq">Preguntas</a>
-    </nav>
-    <div class="acts">
-      <a class="btn btn-ghost" href="https://login.dmdmx.dev">Iniciar sesión</a>
-      <a class="btn btn-dark" href="https://crear.dmdmx.dev/app.html">Empezar gratis</a>
-      <button class="nav-toggle" id="navToggle" type="button" aria-label="Menú" aria-expanded="false" aria-controls="navDrop">☰</button>
-    </div>
-    <div class="nav-drop" id="navDrop" hidden>
-      <a href="https://crear.dmdmx.dev/#product">Producto</a>
-      <a href="https://crear.dmdmx.dev/#templates">Ejemplos</a>
-      <a href="https://crear.dmdmx.dev/editor-ia.html">Editor IA</a>
-      <a href="https://crear.dmdmx.dev/#pricing">Precios</a>
-      <a href="https://crear.dmdmx.dev/#faq">Preguntas</a>
-      <a href="https://login.dmdmx.dev">Iniciar sesión</a>
-      <a class="cta-in-menu" href="https://crear.dmdmx.dev/app.html">Empezar gratis →</a>
-    </div>
-  </div>
-</header>
+<body data-page="login">
+  <a class="skip-link" href="#contenido">Saltar al contenido principal</a>
 
-  <div class="login-box">
-    <!-- Logotipo Corporativo DMD -->
-    <div class="login-logo">
-      <a href="https://www.dmdmx.dev" style="display:inline-block; text-decoration:none;">
-        <img src="/favicon.svg" alt="DMD" style="height:52px; width:52px; margin:0 auto 10px auto;">
-        <h1>DMD</h1>
-        <p>Portal Corporativo &amp; Control de Proyectos</p>
+  <header class="site-header">
+    <div class="container container-wide header-inner">
+      <a class="brand" href="index.html" aria-label="dmd, ir al inicio de sesión">
+        <span class="brand-squares" aria-hidden="true">
+          <span class="brand-sq brand-sq-1"></span>
+          <span class="brand-sq brand-sq-2"></span>
+          <span class="brand-sq brand-sq-3"></span>
+          <span class="brand-sq brand-sq-4"></span>
+        </span>
+        <span>dmd</span>
       </a>
+      <nav class="site-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="portal.html">Mi cuenta</a>
+        <a class="nav-link nav-link-cta" href="https://dmd.dmdmx.dev/app.html">Abrir dmd</a>
+      </nav>
     </div>
+  </header>
 
-    <!-- Tarjeta Modular de Acceso -->
-    <div class="card card-outline card-primary" style="box-shadow:0 10px 25px -5px rgba(15, 23, 42, 0.1); border-radius:18px; overflow:hidden;">
-      <div class="card-header" style="justify-content:center; text-align:center; padding:18px 24px;">
-        <h3 class="card-title" style="font-size:1.05rem;">
-          <span class="card-title-icon">🔐</span>
-          Acceso al Panel de Control
-        </h3>
-      </div>
+  <main id="contenido" tabindex="-1">
+    <div class="container">
+      <section class="page-intro" aria-labelledby="titulo-cuenta">
+        <h1 id="titulo-cuenta">Tu cuenta</h1>
+        <p id="subtitulo-cuenta" class="lead">Inicia sesión o crea tu cuenta para administrar tu acceso en dmd.</p>
+      </section>
 
-      <div class="card-body login-card-body">
+      <section id="seccion-cuenta" class="card account-card" aria-label="Acceso a tu cuenta">
+        <div id="cuenta-cargando" class="loading-inline" role="status" aria-live="polite">
+          <span class="spinner" aria-hidden="true"></span>
+          <span>Verificando tu sesión...</span>
+        </div>
 
-        <!-- Banner de Sesión Activa (si el usuario ya inició sesión con Google) -->
-        <div id="alreadyLoggedInBanner" style="display:none; background:#eff6ff; border:1px solid #bfdbfe; border-radius:14px; padding:16px; margin-bottom:18px; text-align:center;">
-          <div style="font-size:1.3rem; margin-bottom:4px;">✨</div>
-          <div style="font-size:0.92rem; font-weight:800; color:#1e40af;" id="alreadyLoggedInName">Sesión Activa</div>
-          <p style="font-size:0.78rem; color:#475569; margin:4px 0 12px;" id="alreadyLoggedInEmail">Ya estás conectado a tu cuenta oficial.</p>
-          <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
-            <a href="portal.html" id="btnContinueToPanel" class="btn btn-primary" style="height:38px; padding:0 16px; font-size:0.84rem; font-weight:800; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">Continuar a mi Panel ➔</a>
-            <button type="button" onclick="handleLogout()" class="btn btn-secondary" style="height:38px; padding:0 14px; font-size:0.82rem; color:#dc2626; border-color:#fca5a5;">Cerrar Sesión</button>
+        <div id="cuenta-error-servicio" class="service-notice" role="status" aria-live="polite" hidden>
+          <p id="cuenta-error-servicio-msg" class="service-notice-title">El servicio de cuentas no está disponible en este momento.</p>
+          <p id="cuenta-error-servicio-hint" class="service-notice-hint">Intenta comprobar de nuevo en unos instantes.</p>
+          <div class="service-actions">
+            <button id="btn-reintentar-auth" class="btn btn-primary btn-sm" type="button">Comprobar de nuevo</button>
+            <a class="btn btn-secondary btn-sm" href="https://dmd.dmdmx.dev/app.html">Ir a dmd</a>
           </div>
         </div>
 
-        <!-- Banner de Acceso Protegido Requerido -->
-        <div id="authRequiredBanner" style="display:none; background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:12px 14px; margin-bottom:16px; font-size:0.82rem; color:#991b1b; text-align:center;">
-          🔒 <strong>Área Protegida:</strong> Por seguridad, inicia sesión con tu cuenta de Google o correo verificado para acceder al panel.
+        <div id="vista-reset-password" hidden>
+          <div id="exito-reset-general" class="form-success-summary" role="status" aria-live="polite" hidden style="margin-bottom: 14px;"></div>
+          <form id="form-reset-password" class="form-grid" novalidate>
+            <div class="field">
+              <h2>Crear nueva contraseña</h2>
+              <p class="field-hint">Elige una contraseña nueva de al menos 6 caracteres para tu cuenta.</p>
+            </div>
+            <div id="error-reset-general" class="form-error-summary" role="alert" hidden></div>
+            <div class="field">
+              <label class="field-label" for="reset-password">Nueva contraseña <span class="required-mark" aria-hidden="true">*</span></label>
+              <div class="password-field">
+                <input id="reset-password" name="password" class="input password-input" type="password" required minlength="6" autocomplete="new-password" placeholder="Mínimo 6 caracteres" aria-describedby="pista-reset-password error-reset-password">
+                <button type="button" class="password-toggle-btn" data-toggle-password="reset-password" aria-label="Mostrar contraseña" aria-pressed="false">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <p id="pista-reset-password" class="field-hint">Usa al menos 6 caracteres.</p>
+              <p id="error-reset-password" class="field-error" aria-live="polite"></p>
+            </div>
+            <div class="field">
+              <label class="field-label" for="reset-password-confirm">Confirmar nueva contraseña <span class="required-mark" aria-hidden="true">*</span></label>
+              <div class="password-field">
+                <input id="reset-password-confirm" name="password_confirm" class="input password-input" type="password" required minlength="6" autocomplete="new-password" placeholder="Repite tu contraseña" aria-describedby="error-reset-password-confirm">
+                <button type="button" class="password-toggle-btn" data-toggle-password="reset-password-confirm" aria-label="Mostrar contraseña" aria-pressed="false">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <p id="error-reset-password-confirm" class="field-error" aria-live="polite"></p>
+            </div>
+            <button id="btn-guardar-reset" class="btn btn-primary btn-full" type="submit">Guardar nueva contraseña</button>
+          </form>
+          <div id="acciones-reset-exito" class="account-primary-cta" hidden>
+            <a class="btn btn-primary btn-full" href="portal.html">Ir a mi cuenta</a>
+            <a class="btn btn-secondary btn-full" href="https://dmd.dmdmx.dev/app.html">Abrir dmd</a>
+          </div>
+          <div class="account-primary-cta">
+            <button id="btn-volver-login-reset" class="btn btn-secondary btn-full" type="button">Volver a iniciar sesión</button>
+          </div>
         </div>
 
-        <!-- Errores visibles del servidor y de Google -->
-        <div id="authError" style="display:none; background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:12px 14px; margin-bottom:16px; font-size:0.84rem; color:#991b1b; text-align:center;"></div>
-        <div id="googleError" style="display:none; background:#fffbeb; border:1px solid #fde68a; border-radius:12px; padding:12px 14px; margin-bottom:16px; font-size:0.84rem; color:#92400e; text-align:center;"></div>
-
-        <!-- PASO 1: Entrar con correo y contraseña (login real de servidor) -->
-        <div id="authStepLogin" class="auth-step">
-          <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:20px; text-align:center;">
-            Accede a tu panel corporativo con tu cuenta de Google o tu correo y contraseña.
-          </p>
-
-          <!-- MÉTODO 1: BOTÓN OFICIAL GOOGLE (verificado en el servidor) -->
-          <button type="button" class="btn-google" id="btnGoogleAuth" onclick="triggerGoogleSignIn()" title="Continuar con Google" style="width:100%; display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:14px;">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
-              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
-              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
-              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-            </svg>
-            <span>Continuar con Google</span>
-          </button>
-
-          <!-- Divisor Sutil -->
-          <div class="auth-divider">
-            <span>O ingresa con tu correo y contraseña</span>
+        <div id="cuenta-invitado" hidden>
+          <div id="aviso-auth-requerida" class="notice-box" role="status" aria-live="polite" hidden style="margin-bottom: 14px;">
+            Inicia sesión para consultar tu cuenta.
           </div>
 
-          <!-- Formulario de Correo + Contraseña (POST /api/auth/login) -->
-          <form id="loginForm">
-            <div style="margin-bottom:14px;">
-              <label for="loginEmail" style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">
-                ✉️ Correo Electrónico:
-              </label>
-              <div style="position:relative;">
-                <input type="email" id="loginEmail" class="auth-input" placeholder="tu.nombre@empresa.com" required autocomplete="email" style="padding-left:42px;">
-                <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:1.05rem; color:var(--text-muted); pointer-events:none;">📧</span>
+          <div id="auth-tabs-wrap" class="auth-tabs" role="tablist" aria-label="Tipo de acceso">
+            <button id="tab-login" class="auth-tab auth-tab-active" type="button" role="tab" aria-selected="true" aria-controls="form-login">Iniciar sesión</button>
+            <button id="tab-registro" class="auth-tab" type="button" role="tab" aria-selected="false" aria-controls="form-registro">Crear cuenta</button>
+          </div>
+
+          <form id="form-login" class="form-grid" novalidate>
+            <div id="error-login-general" class="form-error-summary" role="alert" hidden></div>
+
+            <div class="field">
+              <label class="field-label" for="login-correo">Correo electrónico <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="login-correo" name="email" class="input" type="email" required autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="tucorreo@ejemplo.com" aria-describedby="error-login-correo">
+              <p id="error-login-correo" class="field-error" aria-live="polite"></p>
+            </div>
+
+            <div class="field">
+              <div class="field-label-row">
+                <label class="field-label" for="login-password">Contraseña <span class="required-mark" aria-hidden="true">*</span></label>
+                <button id="btn-abrir-recuperar" class="text-link-btn" type="button" aria-expanded="false" aria-controls="bloque-recuperar-password">¿Olvidaste tu contraseña?</button>
+              </div>
+              <div class="password-field">
+                <input id="login-password" name="password" class="input password-input" type="password" required autocomplete="current-password" placeholder="Tu contraseña" aria-describedby="error-login-password">
+                <button type="button" class="password-toggle-btn" data-toggle-password="login-password" aria-label="Mostrar contraseña" aria-pressed="false">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <p id="error-login-password" class="field-error" aria-live="polite"></p>
+            </div>
+
+            <div id="bloque-recuperar-password" class="recovery-box" hidden>
+              <p class="recovery-title">Recuperar contraseña</p>
+              <p class="field-hint">Escribe tu correo registrado y te enviaremos un enlace para crear una nueva contraseña.</p>
+              <div class="field">
+                <label class="field-label" for="rec-correo">Correo registrado</label>
+                <input id="rec-correo" name="recovery_email" class="input" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="tucorreo@ejemplo.com" aria-describedby="error-rec-correo">
+                <p id="error-rec-correo" class="field-error" aria-live="polite"></p>
+              </div>
+              <p id="estado-rec-password" class="field-hint" role="status" aria-live="polite"></p>
+              <div class="recovery-actions">
+                <button id="btn-enviar-recuperacion" class="btn btn-primary btn-sm" type="button">Enviar enlace</button>
+                <button id="btn-cerrar-recuperar" class="btn btn-secondary btn-sm" type="button">Cerrar</button>
               </div>
             </div>
 
-            <div style="margin-bottom:16px;">
-              <label for="loginPassword" style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">
-                🔑 Contraseña:
-              </label>
-              <div style="position:relative;">
-                <input type="password" id="loginPassword" class="auth-input" placeholder="Tu contraseña" required autocomplete="current-password" minlength="4" style="padding-left:42px;">
-                <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:1.05rem; color:var(--text-muted); pointer-events:none;">🔒</span>
+            <div>
+              <button id="btn-iniciar-sesion" class="btn btn-primary btn-full" type="submit">Iniciar sesión</button>
+            </div>
+          </form>
+
+          <form id="form-registro" class="form-grid" novalidate hidden>
+            <div id="error-reg-general" class="form-error-summary" role="alert" hidden></div>
+
+            <div class="field">
+              <label class="field-label" for="reg-nombre">Nombre <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="reg-nombre" name="name" class="input" type="text" required minlength="2" maxlength="60" autocomplete="name" placeholder="Tu nombre" aria-describedby="error-reg-nombre">
+              <p id="error-reg-nombre" class="field-error" aria-live="polite"></p>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="reg-correo">Correo electrónico <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="reg-correo" name="email" class="input" type="email" required maxlength="180" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="tucorreo@ejemplo.com" aria-describedby="error-reg-correo">
+              <p id="error-reg-correo" class="field-error" aria-live="polite"></p>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="reg-password">Contraseña <span class="required-mark" aria-hidden="true">*</span></label>
+              <div class="password-field">
+                <input id="reg-password" name="password" class="input password-input" type="password" required minlength="6" autocomplete="new-password" placeholder="Mínimo 6 caracteres" aria-describedby="pista-reg-password error-reg-password">
+                <button type="button" class="password-toggle-btn" data-toggle-password="reg-password" aria-label="Mostrar contraseña" aria-pressed="false">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
               </div>
+              <p id="pista-reg-password" class="field-hint">Usa al menos 6 caracteres.</p>
+              <p id="error-reg-password" class="field-error" aria-live="polite"></p>
             </div>
 
-            <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:20px; font-size:0.82rem;">
-              <a href="https://wa.me/527621068212?text=Necesito%20apoyo%20con%20el%20acceso%20al%20portal%20DMD" target="_blank" rel="noopener noreferrer" style="color:var(--primary); font-weight:600;">
-                ¿Ayuda?
-              </a>
+            <div>
+              <button id="btn-crear-cuenta" class="btn btn-primary btn-full" type="submit">Crear cuenta</button>
             </div>
-
-            <button type="submit" id="btnLogin" class="btn btn-primary" style="width:100%; height:46px; border-radius:12px; font-size:0.95rem; font-weight:800; justify-content:center;">
-              Entrar ➔
-            </button>
           </form>
 
-          <div style="text-align:center; font-size:0.84rem; margin-top:16px; color:var(--text-muted);">
-            ¿No tienes cuenta?
-            <a href="#" id="showRegister" style="color:var(--primary); font-weight:700;">Crear cuenta</a>
+          <div id="vista-otp" class="form-grid" hidden>
+            <div class="field">
+              <h2>Código por correo</h2>
+              <p class="field-hint">Enviaremos un código de 6 dígitos a tu correo registrado.</p>
+            </div>
+            <div id="error-otp-general" class="form-error-summary" role="alert" hidden></div>
+            <div id="estado-otp" class="form-success-summary" role="status" aria-live="polite" hidden></div>
+
+            <form id="form-otp-enviar" class="form-grid" novalidate>
+              <div class="field">
+                <label class="field-label" for="otp-correo">Correo electrónico <span class="required-mark" aria-hidden="true">*</span></label>
+                <input id="otp-correo" name="email" class="input" type="email" required autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="tucorreo@ejemplo.com" aria-describedby="error-otp-correo">
+                <p id="error-otp-correo" class="field-error" aria-live="polite"></p>
+              </div>
+              <button id="btn-otp-enviar" class="btn btn-primary btn-full" type="submit">Enviar código</button>
+            </form>
+
+            <form id="form-otp-verificar" class="form-grid" novalidate hidden>
+              <div class="field">
+                <label class="field-label" for="otp-codigo">Código de 6 dígitos <span class="required-mark" aria-hidden="true">*</span></label>
+                <input id="otp-codigo" name="code" class="input input-otp" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" placeholder="000000" aria-describedby="error-otp-codigo">
+                <p id="error-otp-codigo" class="field-error" aria-live="polite"></p>
+              </div>
+              <button id="btn-otp-verificar" class="btn btn-primary btn-full" type="submit">Verificar y entrar</button>
+              <button id="btn-otp-reenviar" class="btn btn-secondary btn-full" type="button">Enviar otro código</button>
+            </form>
+
+            <button id="btn-cerrar-otp" class="btn btn-secondary btn-full" type="button">Volver a correo y contraseña</button>
+          </div>
+
+          <div id="bloque-alternativas">
+            <div class="auth-divider" aria-hidden="true"><span>o</span></div>
+            <div class="auth-alt-box">
+              <div id="error-google-general" class="form-error-summary" role="alert" hidden></div>
+              <button id="btn-google-signin" class="btn btn-secondary btn-full" type="button">
+                <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.35 11.1h-9.18v2.98h5.27c-.23 1.46-1.74 4.28-5.27 4.28-3.17 0-5.76-2.59-5.76-5.76s2.59-5.76 5.76-5.76c1.55 0 2.94.62 3.96 1.62l2.2-2.2C17.9 1.19 15.24 0 12.17 0 5.45 0 .06 5.39.06 12.1s5.39 12.1 12.11 12.1c6.98 0 11.58-4.91 11.58-11.82 0-.79-.08-1.39-.4-2.28z"/></svg>
+                <span>Continuar con Google</span>
+              </button>
+              <button id="btn-abrir-otp" class="btn btn-secondary btn-full" type="button">
+                <span>Entrar con código por correo</span>
+              </button>
+              <p id="estado-google" class="field-hint" role="status" aria-live="polite"></p>
+            </div>
           </div>
         </div>
 
-        <!-- PASO 2: Crear cuenta (POST /api/auth/register) -->
-        <div id="authStepRegister" class="auth-step" style="display:none;">
-          <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:20px; text-align:center;">
-            Crea tu cuenta DMD para guardar tus proyectos y usar el builder con IA.
-          </p>
-
-          <form id="registerForm">
-            <div style="margin-bottom:14px;">
-              <label for="regName" style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">
-                👤 Nombre:
-              </label>
-              <input type="text" id="regName" class="auth-input" placeholder="Tu nombre" required autocomplete="name" minlength="2">
+        <div id="cuenta-activa" hidden>
+          <div class="session-header">
+            <div>
+              <p id="sesion-nombre" class="session-name"></p>
+              <p id="sesion-correo" class="session-email"></p>
+              <p id="sesion-cuota" class="session-quota" hidden></p>
             </div>
-
-            <div style="margin-bottom:14px;">
-              <label for="regEmail" style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">
-                ✉️ Correo Electrónico:
-              </label>
-              <input type="email" id="regEmail" class="auth-input" placeholder="tu.nombre@empresa.com" required autocomplete="email">
-            </div>
-
-            <div style="margin-bottom:20px;">
-              <label for="regPassword" style="font-size:0.82rem; font-weight:700; display:block; margin-bottom:6px; color:var(--text-main);">
-                🔑 Contraseña:
-              </label>
-              <input type="password" id="regPassword" class="auth-input" placeholder="Mínimo 4 caracteres" required autocomplete="new-password" minlength="4">
-            </div>
-
-            <button type="submit" id="btnRegister" class="btn btn-primary" style="width:100%; height:46px; border-radius:12px; font-size:0.95rem; font-weight:800; justify-content:center;">
-              Crear mi cuenta ➔
-            </button>
-          </form>
-
-          <div style="text-align:center; font-size:0.84rem; margin-top:16px; color:var(--text-muted);">
-            ¿Ya tienes cuenta?
-            <a href="#" id="showLogin" style="color:var(--primary); font-weight:700;">Entrar</a>
+            <span class="status-pill">Sesión activa</span>
+          </div>
+          <div class="account-primary-cta">
+            <a id="btn-continuar-destino" class="btn btn-primary btn-full" href="portal.html">Ir a mi cuenta</a>
+          </div>
+          <div class="session-actions">
+            <a id="btn-ir-portal-secundario" class="btn btn-secondary btn-sm" href="portal.html" hidden>Mi cuenta</a>
+            <a class="btn btn-secondary btn-sm" href="https://dmd.dmdmx.dev/app.html">Abrir dmd</a>
+            <a id="btn-ir-admin-login" class="btn btn-secondary btn-sm" href="admin.html" hidden>Administración</a>
+            <button id="btn-cerrar-sesion" class="btn btn-secondary btn-sm" type="button">Cerrar sesión</button>
           </div>
         </div>
 
-      </div>
+        <p id="estado-cuenta" class="status-banner" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+  </main>
 
-      <div class="card-footer" style="font-size:0.8rem; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-        <span>¿Nuevo proyecto? <a href="https://www.dmdmx.dev/#contacto" style="color:var(--primary); font-weight:700;">Solicítalo aquí ➔</a></span>
-        <a href="https://wa.me/527621068212?text=Hola%20DMD,%20necesito%20asistencia%20con%20mi%20cuenta" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted); font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
-          💬 Soporte por WhatsApp
+  <footer class="site-footer">
+    <div class="container container-wide footer-inner">
+      <div class="footer-top">
+        <a class="footer-brand" href="index.html" aria-label="dmd, portal de cuentas">
+          <span class="brand-squares brand-squares-sm" aria-hidden="true">
+            <span class="brand-sq brand-sq-1"></span>
+            <span class="brand-sq brand-sq-2"></span>
+            <span class="brand-sq brand-sq-3"></span>
+            <span class="brand-sq brand-sq-4"></span>
+          </span>
+          <span>dmd</span>
         </a>
+        <nav class="footer-nav" aria-label="Navegación del pie de página">
+          <a class="footer-link" href="login.html">Acceso</a>
+          <a class="footer-link" href="portal.html">Mi cuenta</a>
+          <a class="footer-link" href="https://dmd.dmdmx.dev/app.html">Abrir dmd</a>
+        </nav>
       </div>
+      <p class="footer-note">dmd · Portal de cuentas.</p>
     </div>
+  </footer>
 
-    <!-- Regresar a la Web Principal -->
-    <div style="text-align:center; margin-top:20px;">
-      <a href="https://www.dmdmx.dev" style="font-size:0.86rem; color:var(--text-muted); font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-        ← Volver a DMD
-      </a>
-    </div>
-  </div>
-
-  <!-- Contenedor Toast para Notificaciones Dinámicas -->
-  <div class="toast-container" id="dmdToastContainer" aria-live="polite"></div>
-
-  <!-- Script Inline de Respuesta Inmediata para Cookies -->
-  <script>
-    (function(){
-      try {
-        if (localStorage.getItem("dmd_cookies_accepted") === "true") {
-          document.write('<style>#cookieBanner, .cookie-consent, .cookie-banner { display: none !important; }</style>');
-        }
-      } catch(e){}
-    })();
-    function dmdDismissCookies(e) {
-      if (e) {
-        if (typeof e.stopPropagation === 'function') e.stopPropagation();
-      }
-      try { localStorage.setItem("dmd_cookies_accepted", "true"); } catch(err){}
-      var el = document.getElementById("cookieBanner");
-      if (el) {
-        el.className += " is-hidden";
-        el.style.setProperty("display", "none", "important");
-        try { el.remove(); } catch(err){}
-      }
-      var all = document.querySelectorAll(".cookie-consent, .cookie-banner");
-      for (var i = 0; i < all.length; i++) {
-        all[i].className += " is-hidden";
-        all[i].style.setProperty("display", "none", "important");
-        try { all[i].remove(); } catch(err){}
-      }
-    }
-  </script>
-
-  <!-- Banner Oficial de Privacidad y Cookies (Estilo Apple / Google / Stripe) -->
-  <aside class="cookie-consent" id="cookieBanner" role="region" aria-label="Aviso de cookies">
-    <div class="cookie-content">
-      <div class="cookie-header">
-        <span class="cookie-badge">🍪 Privacidad &amp; Cookies</span>
-        <button type="button" class="cookie-close-btn" onclick="dmdDismissCookies(event); if(window.closeCookieBanner) closeCookieBanner(event);" ontouchstart="dmdDismissCookies(event)" ontouchend="dmdDismissCookies(event)" onpointerdown="dmdDismissCookies(event)" title="Cerrar aviso (✕)">✕</button>
-      </div>
-      <p>Utilizamos almacenamiento local esencial para garantizar la seguridad de tu sesión y recordar tus preferencias corporativas.</p>
-      <div class="cookie-actions">
-        <button type="button" class="btn-accept" onclick="dmdDismissCookies(event); if(window.acceptCookies) acceptCookies(event);" ontouchstart="dmdDismissCookies(event)" ontouchend="dmdDismissCookies(event)" onpointerdown="dmdDismissCookies(event)">Aceptar todas</button>
-        <button type="button" class="btn-reject" onclick="dmdDismissCookies(event); if(window.closeCookieBanner) closeCookieBanner(event);" ontouchstart="dmdDismissCookies(event)" ontouchend="dmdDismissCookies(event)" onpointerdown="dmdDismissCookies(event)">Solo necesarias</button>
-      </div>
-    </div>
-  </aside>
-
-  <!-- Google Identity Services SDK Oficial -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <!-- Ackee Privacy-Friendly Analytics Tracker -->
-  <script async src="assets/tracker.js" data-ackee-server="" data-ackee-domain-id="dmd-platform-production" data-ackee-opts='{ "detailed": true, "ignoreLocalhost": false }'></script>
-  <script src="https://www.dmdmx.dev/script.js"></script>
-  <script src="dmd-patch.js"></script>
-  <script src="dmd-auth.js"></script>
-<script>
-/* Menú móvil del menú píldora DMD (hamburguesa). Verbatim del constructor. */
-(function(){
-  var navToggle=document.getElementById('navToggle');
-  var navDrop=document.getElementById('navDrop');
-  if(!navToggle||!navDrop){return;}
-  navToggle.addEventListener('click',function(e){
-    e.stopPropagation();
-    var open=navDrop.hidden;
-    navDrop.hidden=!open;
-    navToggle.setAttribute('aria-expanded',open?'true':'false');
-  });
-  navDrop.addEventListener('click',function(e){
-    if(e.target.closest('a')){navDrop.hidden=true;navToggle.setAttribute('aria-expanded','false');}
-  });
-  document.addEventListener('click',function(e){
-    if(!navDrop.hidden&&!e.target.closest('#navDrop')&&!e.target.closest('#navToggle')){
-      navDrop.hidden=true;navToggle.setAttribute('aria-expanded','false');
-    }
-  });
-  document.addEventListener('keydown',function(e){
-    if(e.key==='Escape'&&!navDrop.hidden){navDrop.hidden=true;navToggle.setAttribute('aria-expanded','false');}
-  });
-})();
-</script>
-<script src="/dmd-tab-titles.js" defer></script>
+  <script src="/dmd-auth.js"></script>
 </body>
 </html>

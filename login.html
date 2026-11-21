@@ -2,11 +2,23 @@
 <html lang="es-MX">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f5c4d">
   <meta name="color-scheme" content="light dark">
   <title>Iniciar sesión | dmd</title>
   <meta name="description" content="Inicia sesión o crea tu cuenta en dmd para administrar tu acceso y tus proyectos.">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script>
+  (function () {
+    var ua = navigator.userAgent || "";
+    var p = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+      ? "ios"
+      : /Android/i.test(ua)
+        ? "android"
+        : "desktop";
+    document.documentElement.dataset.platform = p;
+  })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
